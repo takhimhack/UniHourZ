@@ -10,6 +10,14 @@ if __name__ == "__main__":
     def rethtml():
         return bottle.static_file("index.html", ".")
 
+    @bottle.route('/registration.html')
+    def rethtml():
+        return bottle.static_file("registration.html", ".")
+    
+    @bottle.route('/home.html')
+    def rethtml():
+        return bottle.static_file("home.html", ".")
+
     @bottle.route('/assets/bootstrap/css/<filename>')
     def return_bootstrap_css(filename):
         return bottle.static_file(filename, "./assets/bootstrap/css/")
