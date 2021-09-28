@@ -5,15 +5,10 @@ import os
 
 if __name__ == "__main__":
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 5000
-    
+
     @bottle.route('/')
     def rethtml():
         return bottle.static_file("index.html", ".")
-
-    #goes through all files and sets a bottle route
-    def load_all_files(root = 'assets'):
-        for possible_file in os.listdir(root):
-            if possible_file
 
     @bottle.route('/assets/bootstrap/css/<filename>')
     def return_bootstrap_css(filename):
