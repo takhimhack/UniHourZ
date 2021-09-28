@@ -25,9 +25,9 @@ RUN apt-get install -y npm
 COPY . .
 
 #Run main.py
-CMD python3 main.py
+CMD python3 main.py $PORT
 
 
-EXPOSE 8000
+EXPOSE $PORT
 
 
