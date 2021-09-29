@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
     @bottle.route('/<filename>')
     def rethtml(filename):
-        return bottle.static_file("filename", ".")
+        return bottle.static_file(filename, ".")
 
     @bottle.route('/assets/bootstrap/css/<filename>')
     def return_bootstrap_css(filename):
