@@ -10,5 +10,17 @@ config = {
 
 firebase = Firebase(config)
 
+sample_entry = {
+    "123456": {
+        "name" : "FirstName LastName",
+        "students" : ['studenta', 'studentb', 'studentc']
+    },
+    "234567" : {
+        "name" : "FromServer ToDB",
+        "students" : ['studente', 'studentb', 'studentf'] 
+    }
+}
 
+
+db = firebase.database()
 
