@@ -19,7 +19,7 @@ create_image:
 
 #runs a docker image
 run_image:
-	$(DC) $(DCRUNARGS) -d $(IMAGENAME)
+	$(DC) $(DCRUNARGS) $(IMAGENAME)
 
 #stops all running containers, removes them, and also all images.
 clean:
