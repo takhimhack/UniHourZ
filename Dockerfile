@@ -29,5 +29,3 @@ EXPOSE $PORT
 
 #Run main.py
 CMD python3 main.py $PORT
-
-
