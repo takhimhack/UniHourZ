@@ -10,6 +10,7 @@ RUN apt-get update --fix-missing
 RUN apt-get install -y python3
 RUN apt-get install -y python3-pip
 RUN pip3 install --upgrade pip
+RUN pip3 install bottle
 RUN pip3 install firebase
 RUN pip3 install setuptools_rust
 RUN pip3 install python_jwt
@@ -26,5 +27,5 @@ COPY . .
 
 EXPOSE $PORT
 
-
+#Run main.py
 CMD python3 main.py $PORT
