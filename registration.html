@@ -6,27 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>CSE_442</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/Login-Form-Dark.css">
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
 <body>
-    <section class="login-dark">
-        <form method="post">
+    <section id="message" class="login-dark">
+        <form method="post" oninput="Confirm_Password.setCustomValidity(Confirm_Password.value != password_original.value ? &quot;Passwords do not match.&quot; : &quot;&quot;)">
             <h2 class="visually-hidden">Login Form</h2>
             <div class="illustration"><img src="assets/img/UniHourZ-logo2.png" style="width: 218px;">
                 <h4 style="color: rgb(255,255,255);">Sign up</h4>
             </div>
-            <div class="mb-3"><input class="form-control" type="name" name="name" placeholder="Name"></div>
-            <div class="mb-3"><input class="form-control" type="email" name="email" placeholder="Email"></div>
-            <div class="mb-3"><input class="form-control" type="password" name="password" placeholder="Password"><input class="form-control" type="password" name="password-repeat" placeholder="Confirm Password" style="height: 57px;"></div><select class="form-select">
+            <div class="mb-3"><input class="form-control" type="text" name="Name" placeholder="Name" required="" pattern="^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&amp;*(){}|~<>;:[\]]{2,}$" style="height: 44px;"><input class="form-control" type="email" name="email" placeholder="Enter your buffalo.edu email" required="" pattern=".+@buffalo\.edu" style="height: 44px;"></div>
+            <div class="mb-3"><input class="form-control" type="password" id="password_one" name="password_original" placeholder="Password" required="" minlength="6"><input class="form-control" type="password" id="password_two" name="Confirm_Password" placeholder="Confirm Password" style="height: 57px;" minlength="6"></div><select class="form-select" required="">
                 <optgroup label="What is your profession?">
                     <option value="12" selected="">Student</option>
-                    <option value="13">Instructor</option>
+                    <option value="14">Instructor</option>
                 </optgroup>
-            </select>
-            <div class="mb-3"><a class="btn btn-primary d-block w-100" role="button" href="home.html">Register</a></div><a class="forgot" href="index.html" style="text-align: right;height: 13px;">Already have an account? Log in</a>
+            </select><span id="message"></span>
+            <div class="mb-3"><button class="btn btn-primary d-block w-100" type="submit">Register</button></div><a class="forgot" href="index.html" style="text-align: right;height: 13px;">Already have an account? Log in</a>
         </form>
     </section>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
