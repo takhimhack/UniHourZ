@@ -1,9 +1,9 @@
 import sys
 import bottle
-import os
 import json
 
-from server_code.parse_login.parse_login import parse_login
+from server_code.parse_login.parse_login import parse_email
+from server_code import client_validator
 
 
 if __name__ == "__main__":
@@ -42,18 +42,43 @@ if __name__ == "__main__":
         return bottle.static_file(filename, "./assets/img/")
 
     @bottle.post('/userLogin')
-    def validateLogin():
+    def validate_login():
         response=bottle.request.body.read().decode()
-        decoded_response = bottle.html_escape(response)
-        decoded_response=json.loads(response)
-        if "email" not in decoded_response or "name" not in decoded_response or "password" not in decoded_response:
+        decoded_response = client_validator.sanitize_input(response)
+        #check if registering
+        if client_validator.contains(decoded_response, 
+            ['email', 'name', 'password', 'loginType', 'typeofUser']):
+            validState = parse_email(decoded_response['email'], 'buffalo.edu')
+            if (validState != 'valid'):
+                return json.dumps({
+                    'valid': validState
+                })
+            #some firebase registration code, then return success
             return json.dumps({
-            "valid" : 0
+                    'valid': validState
             })
-        isvalid = parse_login(r"^([^@+]+)+?(\w+)?@([^@]+)", decoded_response['email'], "buffalo.edu")
-        # return 0 as a JSON object if email is not valid else 1.
-        return json.dumps({
-            "valid" : 1 if isvalid else 0
-        })
+        #this is for loggin in
+        elif client_validator.contains(decoded_response, ['email', 'password']):
+            validState = parse_email(decoded_response['email'], 'buffalo.edu')
+            if (validState != 'valid'):
+                return json.dumps({
+                    'valid': validState
+                })
+            #some firebase login code, then return success
+            return json.dumps({
+                    'valid': validState
+            })
+        
+        else:
+            return json.dumps({
+                    'valid': 'invalid!'
+            })
+        
+
+
+
+
+
+
             
     bottle.run(host="0.0.0.0", port=port)

@@ -21,6 +21,6 @@ sample_entry = {
     }
 }
 
-
+auth = firebase.auth()
 db = firebase.database()
 

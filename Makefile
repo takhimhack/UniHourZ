@@ -8,7 +8,15 @@ IMAGENAME ?= example_image
 #The arguments to build a docker image
 DCBUILDARGS := build -t 
 #The arguments to run a docker image.
-DCRUNARGS := run -e PORT=$(DCPORT) -p $(HOSTPORT):$(DCPORT) -d 
+DCRUNARGS := run
+#API key for test database
+APIKEY := AIzaSyB8qHYVB7tIoTKiSwl0pFnc2SZv6rRhZA8
+#AuthDomain for test database
+AUTHDOMAIN := projectdemo-cfd84.firebaseapp.com
+#Database URL for test database
+DATABASEURL := https://projectdemo-cfd84-default-rtdb.firebaseio.com
+#storage bucket for the test database
+STORAGEBUCKET := projectdemo-cfd84.appspot.com   
 
 #creats a docker image and runs it
 all: create_image run_image
@@ -19,7 +27,13 @@ create_image:
 
 #runs a docker image
 run_image:
-	$(DC) $(DCRUNARGS) $(IMAGENAME)
+	$(DC) $(DCRUNARGS) -e PORT=$(DCPORT) \
+	 -e apiKey=$(APIKEY) \
+	 -e authDomain=$(AUTHDOMAIN) \
+	 -e databaseURL=$(DATABASEURL) \
+	 -e storageBucket=$(STORAGEBUCKET) \
+	 -p $(HOSTPORT):$(DCPORT) \
+	 -d $(IMAGENAME)
 
 #stops all running containers, removes them, and also all images.
 clean:
