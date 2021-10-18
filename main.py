@@ -1,6 +1,7 @@
 import sys
 import bottle
 import os
+import requests
 import fireapp
 
 
@@ -9,23 +10,26 @@ if __name__ == "__main__":
 
     @bottle.route('/')
     def rethtml():
-        return bottle.static_file("index.html", ".")
+        return bottle.template("index.html", errormessage="")
 
-    @bottle.route('/<filename>')
-    def rethtml(filename):
-        return bottle.static_file(filename, ".")
+    # @bottle.route('/<filename>')
+    # def rethtml(filename):
+    #     return bottle.static_file(filename, ".")
 
     @bottle.post('/')
     def do_login():
-        postdata = bottle.request.body.read()
         password = bottle.request.forms.get("password")
         email = bottle.request.forms.get("email")
         try:
             user = fireapp.auth.sign_in_with_email_and_password(email, password)
-            return bottle.static_file("home.html", ".")
-        except:
-            bottle.response.status = 400
-            return "Error logging in."
+            return bottle.template("home.html", username=email)
+        except requests.HTTPError as err:
+            if err.strerror[err.strerror.find("message")+11:err.strerror.find("message")+26] == 'EMAIL_NOT_FOUND':
+                return bottle.template("index.html", errormessage="Invalid email")
+            elif err.strerror[err.strerror.find("message")+11:err.strerror.find("message")+27] == 'INVALID_PASSWORD':
+                return bottle.template("index.html", errormessage="Invalid password")
+            else:
+                return bottle.template("index.html", errormessage="Error logging in")
 
     @bottle.route('/assets/bootstrap/css/<filename>')
     def return_bootstrap_css(filename):
