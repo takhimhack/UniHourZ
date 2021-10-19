@@ -6,15 +6,19 @@ ENV HOME /root
 
 WORKDIR /root
 
-COPY . .
 
 RUN apt-get update --fix-missing
 RUN apt-get install -y python3
 RUN apt-get install -y python3-pip
 RUN pip3 install --upgrade pip
-RUN pip3 install -r requirements.txt
 RUN apt-get install -y nodejs
 RUN apt-get install -y npm
+
+COPY requirements.txt requirements.txt
+
+RUN pip3 install -r requirements.txt
+
+COPY . .
 
 
 EXPOSE $PORT

@@ -35,8 +35,13 @@ run_image:
 	 -p $(HOSTPORT):$(DCPORT) \
 	 -d $(IMAGENAME)
 
-#stops all running containers, removes them, and also all images.
+#stops all running containers and removes them
 clean:
 	$(DC) kill $(shell $(DC) ps -q)
 	$(DC) rm $(shell $(DC) ps -a -q)
-	$(DC) rmi $(shell $(DC) images -q)
+	$(DC) rmi $(shell $(DC) images -f "dangling=true" -q)
+#stops all running containers, removes them, and also the created images.
+cclean:
+	$(DC) kill $(shell $(DC) ps -q)
+	$(DC) rm $(shell $(DC) ps -a -q)
+	$(DC) rmi $(shell $(DC) images -a -q)

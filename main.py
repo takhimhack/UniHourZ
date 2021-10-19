@@ -4,6 +4,7 @@ import json
 
 from server_code.parse_login.parse_login import parse_email
 from server_code import client_validator
+from server_code.FirebaseAPI.Registration import registerUser
 
 
 if __name__ == "__main__":
@@ -41,34 +42,41 @@ if __name__ == "__main__":
     def return_img(filename):
         return bottle.static_file(filename, "./assets/img/")
 
-    @bottle.post('/userLogin')
-    def validate_login():
+    @bottle.post('/userRegistration')
+    def validate_registration():
         response=bottle.request.body.read().decode()
         decoded_response = client_validator.sanitize_input(response)
         #check if registering
         if client_validator.contains(decoded_response, 
-            ['email', 'name', 'password', 'loginType', 'typeofUser']):
+            ['email', 'name', 'password', 'typeofUser']):
             validState = parse_email(decoded_response['email'], 'buffalo.edu')
             if (validState != 'valid'):
                 return json.dumps({
                     'valid': validState
                 })
-            #some firebase registration code, then return success
+            validState = registerUser(decoded_response)
             return json.dumps({
                     'valid': validState
             })
-        #this is for loggin in
-        elif client_validator.contains(decoded_response, ['email', 'password']):
+        else:
+            return json.dumps({
+                    'valid': 'invalid!'
+            })
+
+    @bottle.post('/userLogin')
+    def validate_login():
+        response=bottle.request.body.read().decode()
+        decoded_response = client_validator.sanitize_input(response)
+        if client_validator.contains(decoded_response, ['email', 'password']):
             validState = parse_email(decoded_response['email'], 'buffalo.edu')
             if (validState != 'valid'):
                 return json.dumps({
                     'valid': validState
                 })
-            #some firebase login code, then return success
+            #run login code
             return json.dumps({
                     'valid': validState
             })
-        
         else:
             return json.dumps({
                     'valid': 'invalid!'
