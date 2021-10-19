@@ -15,7 +15,8 @@
   <body>
     <section id="message" class="login-dark">
       <form
-        method="post"
+        action="/index.html"
+        method="GET"
         oninput='Confirm_Password.setCustomValidity(Confirm_Password.value != password_original.value ? "Passwords do not match." : "")'
       >
         <h2 class="visually-hidden">Login Form</h2>
