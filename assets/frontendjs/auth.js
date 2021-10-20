@@ -1,3 +1,8 @@
+const form = document.querySelector('form')
+form.addEventListener('submit', event => {
+  event.preventDefault()
+})
+
 function submit_registration() {
   let json_obj = JSON.stringify({
     name: retrieve_name(),
@@ -15,7 +20,7 @@ function submit_login() {
     password: retrieve_password(),
   });
   console.log(json_obj);
-  ajaxPostRequest("/userLogin", json_obj, process_auth_response);
+  ajaxPostRequest("/userLogin", json_obj, process_auth);
 }
 
 function retrieve_name() {
@@ -59,6 +64,16 @@ function process_auth_response(login_response) {
     document.getElementById("errormsg").innerHTML = decoded_response.valid;
   } else {
     document.getElementById("errormsg").innerHTML = "";
+  }
+}
+
+function process_auth(login_response) {
+  let decoded_response = JSON.parse(login_response);
+  if (decoded_response.valid !== "valid") {
+    document.getElementById("errorf").innerHTML = decoded_response.message;
+  } else {
+    window.location="home.html";
+    document.getElementById("welcome").innerHTML = decoded_response.user;
   }
 }
 

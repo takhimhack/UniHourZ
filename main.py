@@ -2,6 +2,12 @@ import sys
 import bottle
 import json
 
+import os
+import requests
+
+import server_code.FirebaseAPI.firebaseAPI as fire
+
+
 from server_code.parse_login.parse_login import parse_email
 from server_code import client_validator
 from server_code.FirebaseAPI.Registration import registerUser
@@ -44,6 +50,22 @@ if __name__ == "__main__":
 
     @bottle.post('/userRegistration')
     def validate_registration():
+        response = bottle.request.body.read().decode()
+        decoded_response = client_validator.sanitize_input(response)
+        # check if registering
+        if client_validator.contains(decoded_response, ['email', 'name', 'password', 'typeofUser']):
+            valid_state = parse_email(decoded_response['email'], 'buffalo.edu')
+            if valid_state != 'valid':
+                return json.dumps({
+                    'valid': valid_state
+                })
+            valid_state = registerUser(decoded_response)
+            return json.dumps({
+                'valid': valid_state
+            })
+        else:
+            return json.dumps({
+                'valid': 'invalid!'
         response=bottle.request.body.read().decode()
         decoded_response = client_validator.sanitize_input(response)
         #check if registering
@@ -65,28 +87,24 @@ if __name__ == "__main__":
 
     @bottle.post('/userLogin')
     def validate_login():
-        response=bottle.request.body.read().decode()
+        response = bottle.request.body.read().decode()
         decoded_response = client_validator.sanitize_input(response)
         if client_validator.contains(decoded_response, ['email', 'password']):
-            validState = parse_email(decoded_response['email'], 'buffalo.edu')
-            if (validState != 'valid'):
-                return json.dumps({
-                    'valid': validState
-                })
-            #run login code
-            return json.dumps({
-                    'valid': validState
-            })
+            valid_state = parse_email(decoded_response['email'], 'buffalo.edu')
+            if valid_state != 'valid':
+                return json.dumps({'valid': 'invalid!', 'message': "Enter valid email address"})
+            try:
+                user = fire.auth.sign_in_with_email_and_password(decoded_response["email"], decoded_response["password"])
+                return json.dumps({'valid': 'valid', 'user': decoded_response["email"]})
+            except requests.HTTPError as err:
+                if err.strerror[err.strerror.find("message") + 11:err.strerror.find("message") + 26] == 'EMAIL_NOT_FOUND':
+                    return json.dumps({'valid': 'invalid!', 'message': "No account with that email"})
+                elif err.strerror[
+                     err.strerror.find("message") + 11:err.strerror.find("message") + 27] == 'INVALID_PASSWORD':
+                    return json.dumps({'valid': 'invalid!', 'message': "Invalid password"})
+                else:
+                    return json.dumps({'valid': 'invalid!', 'message': "Login error"})
         else:
-            return json.dumps({
-                    'valid': 'invalid!'
-            })
-        
+            return json.dumps({'valid': 'invalid!', 'message': "Enter email and password"})
 
-
-
-
-
-
-            
     bottle.run(host="0.0.0.0", port=port)
