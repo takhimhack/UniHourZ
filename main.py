@@ -20,9 +20,9 @@ if __name__ == "__main__":
     def ret_html():
         return bottle.static_file("index.html", ".")
 
-    @bottle.route('/<filename:re[:.html$]>')
+    @bottle.route('/<filename>')
     def ret_html_2(filename):
-        return bottle.static_file(filename, ".")
+        return bottle.static_file(filename, ".") if ".html" in filename else None
 
     @bottle.route('/assets/<filename:path>')
     def ret_assets(filename):
