@@ -1,10 +1,13 @@
 import sys
 import bottle
 import json
+
 import os
 import requests
 
 import server_code.FirebaseAPI.firebaseAPI as fire
+
+
 from server_code.parse_login.parse_login import parse_email
 from server_code import client_validator
 from server_code.FirebaseAPI.Registration import registerUser
@@ -63,6 +66,23 @@ if __name__ == "__main__":
         else:
             return json.dumps({
                 'valid': 'invalid!'
+        response=bottle.request.body.read().decode()
+        decoded_response = client_validator.sanitize_input(response)
+        #check if registering
+        if client_validator.contains(decoded_response, 
+            ['email', 'name', 'password', 'typeofUser']):
+            validState = parse_email(decoded_response['email'], 'buffalo.edu')
+            if (validState != 'valid'):
+                return json.dumps({
+                    'valid': validState
+                })
+            validState = registerUser(decoded_response)
+            return json.dumps({
+                    'valid': validState
+            })
+        else:
+            return json.dumps({
+                    'valid': 'invalid!'
             })
 
     @bottle.post('/userLogin')
