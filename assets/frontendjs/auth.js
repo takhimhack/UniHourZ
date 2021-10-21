@@ -1,7 +1,7 @@
-const form = document.querySelector('form')
-form.addEventListener('submit', event => {
-  event.preventDefault()
-})
+const form = document.querySelector("form");
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+});
 
 function submit_registration() {
   let json_obj = JSON.stringify({
@@ -64,6 +64,7 @@ function process_auth_response(login_response) {
     document.getElementById("errormsg").innerHTML = decoded_response.valid;
   } else {
     document.getElementById("errormsg").innerHTML = "";
+    window.location = "index.html";
   }
 }
 
