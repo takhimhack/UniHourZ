@@ -64,7 +64,7 @@ function process_auth_response(login_response) {
     document.getElementById("errormsg").innerHTML = decoded_response.valid;
   } else {
     document.getElementById("errormsg").innerHTML = "";
-    window.location = "profile.html";
+    window.location = "landing.html";
   }
 }
 
@@ -73,7 +73,7 @@ function process_auth(login_response) {
   if (decoded_response.valid !== "valid") {
     document.getElementById("errorf").innerHTML = decoded_response.message;
   } else {
-    window.location = "profile.html";
+    window.location = "landing.html";
     document.getElementById("welcome").innerHTML = decoded_response.user;
   }
 }
