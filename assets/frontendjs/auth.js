@@ -73,8 +73,7 @@ function process_auth(login_response) {
   if (decoded_response.valid !== "valid") {
     document.getElementById("errorf").innerHTML = decoded_response.message;
   } else {
-    window.location = "home.html";
-    document.getElementById("welcome").innerHTML = decoded_response.user;
+    window.location="home.html";
   }
 }
 
