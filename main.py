@@ -62,7 +62,7 @@ if __name__ == "__main__":
                 return json.dumps({'valid': 'valid', 'user': decoded_response["email"]})
             except requests.HTTPError as err:
                 if err.strerror[err.strerror.find("message") + 11:err.strerror.find("message") + 26] == 'EMAIL_NOT_FOUND':
-                    return json.dumps({'valid': 'invalid!', 'message': "No account with that email"})
+                    return json.dumps({'valid': 'invalid!', 'message': "Account does not exist"})
                 elif err.strerror[
                      err.strerror.find("message") + 11:err.strerror.find("message") + 27] == 'INVALID_PASSWORD':
                     return json.dumps({'valid': 'invalid!', 'message': "Invalid password"})
