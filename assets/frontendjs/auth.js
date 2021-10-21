@@ -64,7 +64,7 @@ function process_auth_response(login_response) {
     document.getElementById("errormsg").innerHTML = decoded_response.valid;
   } else {
     document.getElementById("errormsg").innerHTML = "";
-    window.location = "index.html";
+    window.location = "landing.html";
   }
 }
 
