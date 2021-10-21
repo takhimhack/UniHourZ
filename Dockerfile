@@ -11,16 +11,12 @@ RUN apt-get update --fix-missing
 RUN apt-get install -y python3
 RUN apt-get install -y python3-pip
 RUN pip3 install --upgrade pip
-RUN pip3 install bottle
-RUN pip3 install firebase
-RUN pip3 install python_jwt
-RUN pip3 install gcloud
-RUN pip3 install sseclient 
-RUN pip3 install pycryptodome
-RUN pip3 install requests_toolbelt
-RUN pip3 install email_validator
 RUN apt-get install -y nodejs
 RUN apt-get install -y npm
+
+COPY requirements.txt requirements.txt
+
+RUN pip3 install -r requirements.txt
 
 COPY . .
 
