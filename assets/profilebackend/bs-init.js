@@ -9,6 +9,7 @@ if (window.innerWidth < 768) {
 
 document.addEventListener('DOMContentLoaded', function() {
 	AOS.init();
+<<<<<<< HEAD
 }, false);
 
 <<<<<<< Updated upstream
@@ -26,3 +27,6 @@ uniLogout.addEventListener('click', (e) => {
 >>>>>>> Stashed changes
 	})
 })
+=======
+}, false);
+>>>>>>> 84dce2bb493e4d0641709bcb25afec78e852e18f
