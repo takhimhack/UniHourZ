@@ -10,3 +10,11 @@ if (window.innerWidth < 768) {
 document.addEventListener('DOMContentLoaded', function() {
 	AOS.init();
 }, false);
+
+const logout = document.querySelector('#logout');
+logout.addEventListener('click', (e) => {
+	e.preventDefault();
+	auth.signout().then(() =>{
+		console.log('user has signed out form unihourz')
+	})
+})
