@@ -11,10 +11,18 @@ document.addEventListener('DOMContentLoaded', function() {
 	AOS.init();
 }, false);
 
+<<<<<<< Updated upstream
 const logout = document.querySelector('#logout');
 logout.addEventListener('click', (e) => {
 	e.preventDefault();
 	auth.signout().then(() =>{
 		console.log('user has signed out form unihourz')
+=======
+const uniLogout = document.querySelector('#logout');
+uniLogout.addEventListener('click', (e) => {
+	e.prevemtDefault();
+	auth.signOut().then(()=>{
+		console.log('user has logged out');
+>>>>>>> Stashed changes
 	})
 })
