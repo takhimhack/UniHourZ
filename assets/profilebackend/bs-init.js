@@ -11,10 +11,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	AOS.init();
 }, false);
 
-const logout = document.querySelector('#logout');
+const logout = document.getElementById('logout');
 logout.addEventListener('click', (e) => {
 	e.preventDefault();
-	auth.signout().then(() =>{
+	auth.signOut().then(() =>{
 		console.log('user has signed out form unihourz')
 	})
+	var href = "index.html";
+	window.location=href;	
 })
