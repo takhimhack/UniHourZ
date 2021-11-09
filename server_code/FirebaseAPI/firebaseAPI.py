@@ -10,14 +10,23 @@ Might need to edit firebase database rules to get this to work...
 } 
 should be the ruleset for the firebase database!
 '''
-config = {
+config_user = {
    "apiKey": os.environ.get('apiKey'),
    "authDomain": os.environ.get('authDomain'),
    "databaseURL": os.environ.get('databaseURL'),
    "storageBucket": os.environ.get('storageBucket')
 }
 
-firebase = Firebase(config)
+config_server = {
+   "apiKey": os.environ.get('apiKey'),
+   "authDomain": os.environ.get('authDomain'),
+   "databaseURL": os.environ.get('databaseURL'),
+   "storageBucket": os.environ.get('storageBucket'),
+   "serviceAccount": "service_account/service.json"
+}
+
+firebase = Firebase(config_user)
+firebase_server = Firebase(config_server)
 
 sample_entry = {
     "123456": {
@@ -32,4 +41,5 @@ sample_entry = {
 
 auth = firebase.auth()
 db = firebase.database()
+server_db = firebase_server.database()
 

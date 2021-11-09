@@ -1,2 +1,3 @@
-server_code/FirebaseAPI/__pycache__
+__pycache__
+service_account
 .vscode
