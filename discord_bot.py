@@ -5,31 +5,110 @@ import discord.ext
 import json
 from discord.utils import get
 from discord.ext import commands, tasks
-from discord.ext.commands import has_permissions,  CheckFailure, check
+from discord.ext.commands import has_permissions, CheckFailure, check
 
-from server_code.FirebaseAPI.firebaseAPI import *
 import server_code.FirebaseAPI.firebase_queue as fb
-from server_code.FirebaseAPI.queue_exceptions.queue_exceptions import *
 
-bot = discord.Client()
+client = discord.Client()
+
 bot = commands.Bot(command_prefix='!')
+course = "cse 354"
+OHchannel = 907808237104017499
 
-@bot.event()
+@client.event
 async def on_ready():
-    print("bot started!") #will print "bot online" in the console when the bot is online
-    
+	print("bot started!")  
+
+#Async waiting for command messages
 @bot.command()
-async def joinq(message):
+async def joinqueue(message): 
 	if message.author == bot.user:
-		return
-	
-	embed = discord.Embed()
-	embed.add_field(name="Joining Office Hour Queue", value="Your request to join the queue has been added.")
+			return
+	preQueue = fb.access_queue(course)
 
-	msg = await message.channel.send(embed=embed)
-	msg.add_reaction("✅")
-	msg.add_reaction("❌")
+	inQueue = False
+	for i in preQueue[0]:
+			if i['name'] == str(message.author):
+				inQueue = True
 
-bot.run(os.getenv("TOKEN")) #get your bot token and create a key named `TOKEN` to the secrets panel then paste your bot token as the value. 
-#to keep your bot from shutting down use https://uptimerobot.com then create a https:// monitor and put the link to the website that appewars when you run this repl in the monitor and it will keep your bot alive by pinging the flask server
-#enjoy!
+	if inQueue:
+		embed = discord.Embed()
+		embed.add_field(name="Joining Office Hour Queue",
+										value="Error: You are already in the queue.")
+		OHQueueChannel = bot.get_channel(OHchannel)
+		msg = await OHQueueChannel.send(embed=embed)
+		await msg.add_reaction("❌")
+	else:
+		preLength = preQueue[1]
+		fb.enqueue_student(course, "", str(message.author))
+		postLength = fb.access_queue(course)[1]
+
+		if preLength < postLength:
+			embed = discord.Embed()
+			embed.add_field(name="Joining Office Hour Queue",
+											value="You have joined the queue.")
+			OHQueueChannel = bot.get_channel(OHchannel)
+			msg = await OHQueueChannel.send(embed=embed)
+			
+			await msg.add_reaction("✅")
+		else:
+			embed = discord.Embed()
+			embed.add_field(name="Joining Office Hour Queue",
+											value="Error: You have failed to join the queue.")
+			OHQueueChannel = bot.get_channel(OHchannel)
+			msg = await OHQueueChannel.send(embed=embed)
+			await msg.add_reaction("❌")
+
+
+@bot.command()
+async def dequeue(message):
+	if message.author == bot.user:
+			return
+
+	ls = fb.access_queue(course)
+	lengthOfQueue = ls[1]
+
+	if lengthOfQueue > 0:		
+		reply = fb.dequeue_student(course)
+		embed = discord.Embed()
+		embed.add_field(name="Dequeued Student",
+										value=reply['name'])
+		OHQueueChannel = bot.get_channel(OHchannel)
+		msg = await OHQueueChannel.send(embed=embed)
+	else: 
+		embed = discord.Embed()
+		embed.add_field(name="Unable to Dequeue",
+		value='The queue is empty.')
+		OHQueueChannel = bot.get_channel(OHchannel)
+		msg = await OHQueueChannel.send(embed=embed)
+
+
+@bot.command()
+async def viewqueue(message):
+	if message.author == bot.user:
+			return
+
+	ls = fb.access_queue(course)
+	lengthOfQueue = ls[1]
+	queueList = ls[0]
+	formattedQueueList = ""
+
+	queueCount = 0
+	if lengthOfQueue > 0:
+		for i in queueList:
+			queueCount += 1
+			formattedQueueList += str(queueCount) + ". " +str((i['name'] + "\n"))
+		embed = discord.Embed()
+		embed.add_field(name="Current Queue", value=formattedQueueList)
+		embed.add_field(name="Length: ", value=str(lengthOfQueue))
+		OHQueueChannel = bot.get_channel(OHchannel)
+		msg = await OHQueueChannel.send(embed=embed)
+	else:
+		embed = discord.Embed()
+		embed.add_field(name="Current Queue", value="No Queue")
+		OHQueueChannel = bot.get_channel(OHchannel)
+		msg = await OHQueueChannel.send(embed=embed)	
+
+
+
+bot.run(os.getenv("TOKEN"))
