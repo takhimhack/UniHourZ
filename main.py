@@ -7,7 +7,7 @@ import requests
 
 import server_code.FirebaseAPI.firebaseAPI as fire
 
-
+from bs4 import BeautifulSoup
 from server_code.parse_login.parse_login import parse_email
 from server_code import client_validator
 from server_code.FirebaseAPI.Registration import registerUser
@@ -70,5 +70,25 @@ if __name__ == "__main__":
                     return json.dumps({'valid': 'invalid!', 'message': "Login error"})
         else:
             return json.dumps({'valid': 'invalid!', 'message': "Enter email and password"})
+
+    @bottle.route('/queue')
+    def get_queue():
+        qdata = [{'name': 'Pete', 'email': 'pete78@buffalo.edu'}, {'name': 'Charles', 'email': 'crt1@buffalo.edu'}, {'name': 'Kristen', 'email': 'kristenh@buffalo.edu'}]
+        with open("landing.html") as file:
+            htmlfile = file.read()
+            soup = BeautifulSoup(htmlfile, 'html.parser')
+            headtag = soup.find(id='queue')
+            for i, student in enumerate(qdata):
+                divtag = soup.new_tag('div')
+                divtag['class'] = "row"
+                divtag['style'] = "margin: 20px;"
+                div2 = soup.new_tag('div')
+                div2['class'] = 'col-md-6'
+                h6 = soup.new_tag('h6')
+                div2.append(h6)
+                divtag.append(div2)
+                h6.string = f"{i+1}. {student['name']}, {student['email']}"
+                headtag.append(divtag)
+        return str(soup)
 
     bottle.run(host="0.0.0.0", port=port)
