@@ -1,20 +1,9 @@
 /* Sets the cookie information. Expires after exDays */
-export const set_cookie = (authToken, refreshToken, inputEmail, exDays) => {
+export const set_cookie = (key, value, exDays) => {
   const d = new Date();
   d.setTime(d.getTime() + exDays * 24 * 60 * 60 * 1000);
   let expires = "expires=" + d.toUTCString();
-  let email = "email=" + inputEmail;
-  document.cookie =
-    "authToken=" +
-    authToken +
-    ";" +
-    "refreshToken=" +
-    refreshToken +
-    ";" +
-    email +
-    ";" +
-    expires +
-    ";";
+  document.cookie = key + "=" + value + "; " + expires + "; " + "path=/";
 };
 
 /* get a key stored in a cookie */
@@ -39,4 +28,8 @@ export const check_cookie = () => {
   let name = get_cookie("email");
   /* might need to do additional validation with da cookie */
   return name !== null && name !== "";
+};
+
+export const delete_cookie = (key) => {
+  document.cookie = key + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 };

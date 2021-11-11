@@ -21,14 +21,17 @@ const login_success_callback = (userCredential) => {
   let user = userCredential.user;
 
   /* get the email, auth and refresh token */
-  let email = user.email;
+  // let email = user.email;
   let authToken = user.accessToken;
   let refreshToken = user.refreshToken;
 
   /* set a cookie with this information */
+  set_cookie("authToken", authToken, 10);
+  set_cookie("refreshToken", refreshToken, 10);
 
   /* set the location to landing */
   window.location = "landing.html";
+  console.log(get_cookie("email"));
 };
 
 const login_error_callback = (error) => {
