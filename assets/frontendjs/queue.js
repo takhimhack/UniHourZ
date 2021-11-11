@@ -8,12 +8,12 @@ loadpage();
 function process_queue_data(queue_response) {
     let decoded = JSON.parse(queue_response);
     if (decoded.valid === 'valid'){
-        for (var key in decoded) {
+        for (var key in decoded.queues) {
             for (let i = 1; i < 11; i++){
-                if (i > decoded[key].length) {
+                if (i > decoded["queues"][key].length) {
                     document.getElementById(key.toString() + "q" + i.toString()).innerHTML = "";
                 } else {
-                    document.getElementById(key.toString() + "q" + i.toString()).innerHTML = decoded[key]["queue"][i-1]["name"];
+                    document.getElementById(key.toString() + "q" + i.toString()).innerHTML = decoded["queues"][key]["queue"][i-1]["name"];
                 }
             }
         }

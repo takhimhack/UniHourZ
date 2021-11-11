@@ -26,6 +26,8 @@ config_server = {
    "serviceAccount": "service_account/service.json"
 }
 
+
+
 # firebase = Firebase(config_user)
 firebase_server = Firebase(config_server)
 # auth = firebase.auth()
