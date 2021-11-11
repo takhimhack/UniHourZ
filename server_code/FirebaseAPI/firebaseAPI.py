@@ -1,7 +1,7 @@
 import os
 from firebase import Firebase
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 '''
 Might need to edit firebase database rules to get this to work...

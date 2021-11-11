@@ -1,5 +1,5 @@
 function loadpage() {
-    let pdata = JSON.stringify({token: getCookie("fireauth")});
+    let pdata = JSON.stringify({token: getCookie("authToken")});
     ajaxPostRequest('/queuedata', pdata, process_queue_data);
     setTimeout(loadpage, 10000);
 }
@@ -23,28 +23,28 @@ function process_queue_data(queue_response) {
 }
 
 function getCookie(cname) {
-  let name = cname + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(';');
-  for(let i = 0; i <ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
     }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
+    return "";
 }
 
 function ajaxPostRequest(path, data, callback) {
-  let request = new XMLHttpRequest();
-  request.onreadystatechange = function () {
-    if (this.readyState === 4 && this.status === 200) {
-      callback(this.response);
-    }
-  };
-  request.open("POST", path);
-  request.send(data);
+    let request = new XMLHttpRequest();
+    request.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            callback(this.response);
+        }
+    };
+    request.open("POST", path);
+    request.send(data);
 }
