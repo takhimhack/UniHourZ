@@ -1,30 +1,70 @@
 import discord
 import os
+
 import time
 import discord.ext
 import json
 from discord.utils import get
 from discord.ext import commands, tasks
 from discord.ext.commands import has_permissions, CheckFailure, check
-
 import server_code.FirebaseAPI.firebase_queue as fb
+from flask import Flask
+from threading import Thread
 
+# # # # # # # # # # # # # # # # # # #
+# Flask Server to keep replit alive #
+# # # # # # # # # # # # # # # # # # #
+app = Flask('')
+
+@app.route('/')
+def main():
+	print("REPINGED TO STAY UP")
+	return '*Discord Bot waves to you*'
+
+def startWebServer():
+	app.run(host='0.0.0.0', port=8080, debug=False)
+
+def keep_discord_alive():
+	print("CALLED KEEP ALIVE")
+	thread = Thread(target=startWebServer)
+	thread.start()
+
+
+# # # # # # # # # # # # # # # # # # # # # #
+# Discord Bot async requests for commands #
+# # # # # # # # # # # # # # # # # # # # # #
 client = discord.Client()
-
 bot = commands.Bot(command_prefix='!')
-course = "cse 354"
-OHchannel = 907808237104017499
 
-@client.event
+print("Initializing")
+
+@bot.event
 async def on_ready():
-	print("bot started!")  
+	print("Bot started!")  
 
-#Async waiting for command messages
+# Join Queue
 @bot.command()
-async def joinqueue(message): 
+async def joinqueue(message, *, class_name:str = ""): 
 	if message.author == bot.user:
 			return
-	preQueue = fb.access_queue(course)
+
+	originChannelID = message.channel.id
+	originChannel = bot.get_channel(originChannelID)
+	embed = discord.Embed(color=0x344FF5)
+	class_name = class_name.lower().replace(" ", "")
+
+	if len(class_name) == 0:
+		embed.add_field(name="Failed Joining Class", value="❌ Error: Missing Class Name Parameter")
+		await originChannel.send(embed=embed)	
+		return
+	
+	try:
+		preQueue = fb.access_queue(class_name)
+	except:
+		embed.add_field(name="Failed Joining Queue", value="❌ Error: Course Queue Does Not Exist")
+		await originChannel.send(embed=embed)
+		return
+
 
 	inQueue = False
 	for i in preQueue[0]:
@@ -32,63 +72,78 @@ async def joinqueue(message):
 				inQueue = True
 
 	if inQueue:
-		embed = discord.Embed()
-		embed.add_field(name="Joining Office Hour Queue",
-										value="Error: You are already in the queue.")
-		OHQueueChannel = bot.get_channel(OHchannel)
-		msg = await OHQueueChannel.send(embed=embed)
-		await msg.add_reaction("❌")
+		embed.add_field(name="Joining Office Hour Queue", value="❌ Error: You are already in the queue.")
+		await originChannel.send(embed=embed)
+		return
+
+	preLength = preQueue[1]
+	fb.enqueue_student(class_name, "", str(message.author))
+	postLength = fb.access_queue(class_name)[1]
+
+	if preLength < postLength:
+		embed.add_field(name="Joining Office Hour Queue", value="You have joined the queue.")
+		await originChannel.send(embed=embed)
 	else:
-		preLength = preQueue[1]
-		fb.enqueue_student(course, "", str(message.author))
-		postLength = fb.access_queue(course)[1]
+		embed.add_field(name="Joining Office Hour Queue", value="❌ Error: You have failed to join the queue.")
+		await originChannel.send(embed=embed)
 
-		if preLength < postLength:
-			embed = discord.Embed()
-			embed.add_field(name="Joining Office Hour Queue",
-											value="You have joined the queue.")
-			OHQueueChannel = bot.get_channel(OHchannel)
-			msg = await OHQueueChannel.send(embed=embed)
-			
-			await msg.add_reaction("✅")
-		else:
-			embed = discord.Embed()
-			embed.add_field(name="Joining Office Hour Queue",
-											value="Error: You have failed to join the queue.")
-			OHQueueChannel = bot.get_channel(OHchannel)
-			msg = await OHQueueChannel.send(embed=embed)
-			await msg.add_reaction("❌")
-
-
+# Dequeue a student.
 @bot.command()
-async def dequeue(message):
+async def dequeue(message, *, class_name:str = ""):
 	if message.author == bot.user:
 			return
 
-	ls = fb.access_queue(course)
-	lengthOfQueue = ls[1]
+	originChannelID = message.channel.id
+	originChannel = bot.get_channel(originChannelID)
+	embed = discord.Embed(color=0x344FF5)
+	class_name = class_name.lower().replace(" ", "")
+
+	if len(class_name) == 0:
+		embed.add_field(name="Failed Creating Queue", value="❌ Error: Missing Class Name Parameter")
+		await originChannel.send(embed=embed)
+		return
+	
+	try:
+		ls = fb.access_queue(class_name)
+		lengthOfQueue = ls[1]
+	except:
+		embed.add_field(name="Failed Dequeuing Student", value="❌ Error: Course Queue Does Not Exist")
+		await originChannel.send(embed=embed)	
+		return
 
 	if lengthOfQueue > 0:		
-		reply = fb.dequeue_student(course)
-		embed = discord.Embed()
-		embed.add_field(name="Dequeued Student",
-										value=reply['name'])
-		OHQueueChannel = bot.get_channel(OHchannel)
-		msg = await OHQueueChannel.send(embed=embed)
+		reply = fb.dequeue_student(class_name)
+		embed.add_field(name="Dequeued Student", value=reply['name'])
+		await originChannel.send(embed=embed)
 	else: 
-		embed = discord.Embed()
-		embed.add_field(name="Unable to Dequeue",
-		value='The queue is empty.')
-		OHQueueChannel = bot.get_channel(OHchannel)
-		msg = await OHQueueChannel.send(embed=embed)
+		embed.add_field(name="Unable to Dequeue", value='Error: The queue is already empty.')
+		await originChannel.send(embed=embed)
+
 
 
 @bot.command()
-async def viewqueue(message):
+async def viewqueue(message, *, class_name:str = ""):
 	if message.author == bot.user:
 			return
+	
+	originChannelID = message.channel.id
+	originChannel = bot.get_channel(originChannelID)
+	embed = discord.Embed(color=0x344FF5)
+	class_name = class_name.lower().replace(" ", "")
 
-	ls = fb.access_queue(course)
+	if len(class_name) == 0:
+		embed.add_field(name="Failed Creating Queue", value="❌ Error: Missing Class Name Parameter")
+		await originChannel.send(embed=embed)
+		return
+
+
+	try:
+		ls = fb.access_queue(class_name)
+	except:
+		embed.add_field(name="Failed Viewing Queue", value="❌ Error: Course Queue Does Not Exist")
+		await originChannel.send(embed=embed)	
+		return
+
 	lengthOfQueue = ls[1]
 	queueList = ls[0]
 	formattedQueueList = ""
@@ -98,17 +153,42 @@ async def viewqueue(message):
 		for i in queueList:
 			queueCount += 1
 			formattedQueueList += str(queueCount) + ". " +str((i['name'] + "\n"))
-		embed = discord.Embed()
+		msgTitle = "Current Queue for " + str(class_name)
+		embed=discord.Embed(title=msgTitle)
 		embed.add_field(name="Current Queue", value=formattedQueueList)
 		embed.add_field(name="Length: ", value=str(lengthOfQueue))
-		OHQueueChannel = bot.get_channel(OHchannel)
-		msg = await OHQueueChannel.send(embed=embed)
+		await originChannel.send(embed=embed)
 	else:
-		embed = discord.Embed()
-		embed.add_field(name="Current Queue", value="No Queue")
-		OHQueueChannel = bot.get_channel(OHchannel)
-		msg = await OHQueueChannel.send(embed=embed)	
+		embed.add_field(name="Current Queue", value="Noone is in the queue.")
+		await originChannel.send(embed=embed)
 
 
+@bot.command()
+async def createqueue(message, *, class_name:str = ""): 
+	if message.author == bot.user:
+			return
 
+	originChannelID = message.channel.id
+	originChannel = bot.get_channel(originChannelID)
+	embed = discord.Embed(color=0x344FF5)
+	class_name = class_name.lower().replace(" ", "")
+
+	if len(class_name) == 0:
+		embed.add_field(name="Failed Creating Queue", value="❌ Error: Missing Class Name Parameter")
+		await originChannel.send(embed=embed)
+		return
+
+	try:
+		returnStat = fb.create_queue(class_name)
+	except:
+		embed.add_field(name="Failed Creating Queue", value="❌ Error: Queue Already Exists")
+		await originChannel.send(embed=embed)
+		return
+	msgTitle = "Successfully Created Queue for " + str(class_name)
+	embed=discord.Embed(title=msgTitle)
+	embed.add_field(name="Current Queue:", value=returnStat)
+	await originChannel.send(embed=embed)
+
+
+keep_discord_alive()
 bot.run(os.getenv("TOKEN"))
