@@ -49,29 +49,6 @@ if __name__ == "__main__":
                 'valid': 'invalid!'
             })
 
-    @bottle.post('/userLogin')
-    def validate_login():
-        response = bottle.request.body.read().decode()
-        decoded_response = client_validator.sanitize_input(response)
-        if client_validator.contains(decoded_response, ['email', 'password']):
-            valid_state = parse_email(decoded_response['email'], 'buffalo.edu')
-            if valid_state != 'valid':
-                return json.dumps({'valid': 'invalid!', 'message': "Enter valid email address"})
-            try:
-                user = fire.auth.sign_in_with_email_and_password(decoded_response["email"], decoded_response["password"])
-                packet = json.dumps({'valid': 'valid', 'user': decoded_response["email"], 'token': user['idToken']})
-                return packet
-            except requests.HTTPError as err:
-                if err.strerror[err.strerror.find("message") + 11:err.strerror.find("message") + 26] == 'EMAIL_NOT_FOUND':
-                    return json.dumps({'valid': 'invalid!', 'message': "Account does not exist"})
-                elif err.strerror[
-                     err.strerror.find("message") + 11:err.strerror.find("message") + 27] == 'INVALID_PASSWORD':
-                    return json.dumps({'valid': 'invalid!', 'message': "Invalid password"})
-                else:
-                    return json.dumps({'valid': 'invalid!', 'message': "Login error"})
-        else:
-            return json.dumps({'valid': 'invalid!', 'message': "Enter email and password"})
-
     @bottle.post('/queuedata')
     def return_queue():
         response = bottle.request.body.read().decode()
