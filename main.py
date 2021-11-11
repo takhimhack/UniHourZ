@@ -76,21 +76,20 @@ if __name__ == "__main__":
     def return_queue():
         response = bottle.request.body.read().decode()
         decoded_response = client_validator.sanitize_input(response)
-        print(decoded_response)
         try:
             fire.auth.get_account_info(decoded_response['token'])
         except requests.HTTPError:
             return json.dumps({'valid': 'invalid'})
         try:
-            cse220 = fire_q.access_queue('cse 220')
+            cse220 = fire_q.access_queue('cse220')
         except fire_q.QueueDoesNotExist:
             cse220 = ({}, 0)
         try:
-            cse250 = fire_q.access_queue('cse 250')
+            cse250 = fire_q.access_queue('cse250')
         except fire_q.QueueDoesNotExist:
             cse250 = ({}, 0)
         try:
-            cse354 = fire_q.access_queue('cse 354')
+            cse354 = fire_q.access_queue('cse354')
         except fire_q.QueueDoesNotExist:
             cse354 = ({}, 0)
         return json.dumps({

@@ -18,7 +18,7 @@ function process_queue_data(queue_response) {
             }
         }
     } else {
-//        window.location = "/index.html";
+        window.location = "/index.html";
     }
 }
 
