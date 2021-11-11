@@ -8,7 +8,7 @@ loadpage();
 function process_queue_data(queue_response) {
     let decoded = JSON.parse(queue_response);
     if (decoded.valid === 'valid'){
-        for (var key in decoded.queues) {
+        for (var key in decoded) {
             for (let i = 1; i < 11; i++){
                 if (i > decoded[key].length) {
                     document.getElementById(key.toString() + "q" + i.toString()).innerHTML = "";

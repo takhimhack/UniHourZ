@@ -60,21 +60,19 @@ if __name__ == "__main__":
         try:
             cse220 = fire_q.access_queue('cse220')
         except fire_q.QueueDoesNotExist:
-            cse220 = ([], 0)
+            cse220 = ({}, 0)
         try:
             cse250 = fire_q.access_queue('cse250')
         except fire_q.QueueDoesNotExist:
-            cse250 = ([], 0)
+            cse250 = ({}, 0)
         try:
             cse354 = fire_q.access_queue('cse354')
         except fire_q.QueueDoesNotExist:
-            cse354 = ([], 0)
+            cse354 = ({}, 0)
         return json.dumps({
-            'queues': {
-                'CSE220': {'queue': cse220[0], 'length': cse220[1]},
-                'CSE250': {'queue': cse250[0], 'length': cse250[1]},
-                'CSE354': {'queue': cse354[0], 'length': cse354[1]}
-            },
+            'CSE220': {'queue': cse220[0], 'length': cse220[1]},
+            'CSE250': {'queue': cse250[0], 'length': cse250[1]},
+            'CSE354': {'queue': cse354[0], 'length': cse354[1]},
             'valid': 'valid'
         })
 
