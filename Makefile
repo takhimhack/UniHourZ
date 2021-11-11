@@ -41,15 +41,7 @@ clean:
 	$(DC) rm $(shell $(DC) ps -a -q)
 	$(DC) rmi $(shell $(DC) images -f "dangling=true" -q)
 #stops all running containers, removes them, and also the created images.
-
-cleanContainer:
+cclean:
 	$(DC) kill $(shell $(DC) ps -q)
 	$(DC) rm $(shell $(DC) ps -a -q)
-
-cleanImages:
 	$(DC) rmi $(shell $(DC) images -a -q)
-
-cclean: cleanContainer cleanImages
-	
-	
-	

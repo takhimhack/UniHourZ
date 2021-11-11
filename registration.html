@@ -70,11 +70,11 @@
             <option value="14">Instructor</option>
           </optgroup></select
         ><span id="message"></span>
-        <p style="color: Tomato" id="errormsg"></p>
+        <p id="errormsg"></p>
         <div class="mb-3">
           <button
             class="btn btn-primary d-block w-100"
-            id="registerbutton"
+            onclick="submit_registration();"
             type="submit"
           >
             Register
@@ -89,6 +89,6 @@
       </form>
     </section>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script type="module" src="assets/frontendjs/Register.js"></script>
+    <script src="assets/frontendjs/auth.js"></script>
   </body>
 </html>
