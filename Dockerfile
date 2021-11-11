@@ -15,7 +15,6 @@ RUN python3 -m venv cse442env
 RUN cse442env/bin/pip3 install --upgrade pip
 RUN apt-get install -y nodejs
 RUN apt-get install -y npm
-
 COPY requirements.txt requirements.txt
 
 RUN cse442env/bin/pip3 install -r requirements.txt
