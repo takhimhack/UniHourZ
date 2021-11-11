@@ -10,7 +10,7 @@ def registerUser(decoded_response):
                 'typeofUser': decoded_response['typeofUser']
             }
         }
-        db.child('users').child(decoded_response['name']).set(data_storage, user['idToken'])
+        server_db.child('users').child(decoded_response['name']).set(data_storage, user['idToken'])
         return "valid"
         
     except Exception as e:
