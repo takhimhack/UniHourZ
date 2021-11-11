@@ -59,7 +59,8 @@ if __name__ == "__main__":
                 return json.dumps({'valid': 'invalid!', 'message': "Enter valid email address"})
             try:
                 user = fire.auth.sign_in_with_email_and_password(decoded_response["email"], decoded_response["password"])
-                return json.dumps({'valid': 'valid', 'user': decoded_response["email"]})
+                packet = json.dumps({'valid': 'valid', 'user': decoded_response["email"], 'token': user['idToken']})
+                return packet
             except requests.HTTPError as err:
                 if err.strerror[err.strerror.find("message") + 11:err.strerror.find("message") + 26] == 'EMAIL_NOT_FOUND':
                     return json.dumps({'valid': 'invalid!', 'message': "Account does not exist"})
@@ -71,15 +72,32 @@ if __name__ == "__main__":
         else:
             return json.dumps({'valid': 'invalid!', 'message': "Enter email and password"})
 
-    @bottle.route('/queuedata')
+    @bottle.post('/queuedata')
     def return_queue():
-        cse220 = fire_q.access_queue('CSE220')
-        cse250 = fire_q.access_queue('CSE250')
-        cse331 = fire_q.access_queue('CSE331')
+        response = bottle.request.body.read().decode()
+        decoded_response = client_validator.sanitize_input(response)
+        print(decoded_response)
+        try:
+            fire.auth.get_account_info(decoded_response['token'])
+        except requests.HTTPError:
+            return json.dumps({'valid': 'invalid'})
+        try:
+            cse220 = fire_q.access_queue('cse 220')
+        except fire_q.QueueDoesNotExist:
+            cse220 = ({}, 0)
+        try:
+            cse250 = fire_q.access_queue('cse 250')
+        except fire_q.QueueDoesNotExist:
+            cse250 = ({}, 0)
+        try:
+            cse354 = fire_q.access_queue('cse 354')
+        except fire_q.QueueDoesNotExist:
+            cse354 = ({}, 0)
         return json.dumps({
             'CSE220': {'queue': cse220[0], 'length': cse220[1]},
             'CSE250': {'queue': cse250[0], 'length': cse250[1]},
-            'CSE331': {'queue': cse331[0], 'length': cse331[1]}
+            'CSE354': {'queue': cse354[0], 'length': cse354[1]},
+            'valid': 'valid'
         })
 
     bottle.run(host="0.0.0.0", port=port)

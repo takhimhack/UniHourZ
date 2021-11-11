@@ -73,8 +73,8 @@ function process_auth(login_response) {
   if (decoded_response.valid !== "valid") {
     document.getElementById("errorf").innerHTML = decoded_response.message;
   } else {
+    document.cookie = "fireauth=" + decoded_response.token + "; path=/;";
     window.location = "landing.html";
-    document.getElementById("welcome").innerHTML = decoded_response.user;
   }
 }
 

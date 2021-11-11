@@ -1,5 +1,8 @@
 import os
 from firebase import Firebase
+from dotenv import load_dotenv
+load_dotenv()
+
 '''
 Might need to edit firebase database rules to get this to work...
 {
@@ -10,12 +13,12 @@ Might need to edit firebase database rules to get this to work...
 } 
 should be the ruleset for the firebase database!
 '''
-config_user = {
-   "apiKey": os.environ.get('apiKey'),
-   "authDomain": os.environ.get('authDomain'),
-   "databaseURL": os.environ.get('databaseURL'),
-   "storageBucket": os.environ.get('storageBucket')
-}
+# config_user = {
+#    "apiKey": os.environ.get('apiKey'),
+#    "authDomain": os.environ.get('authDomain'),
+#    "databaseURL": os.environ.get('databaseURL'),
+#    "storageBucket": os.environ.get('storageBucket')
+# }
 
 config_server = {
    "apiKey": os.environ.get('apiKey'),
@@ -25,21 +28,9 @@ config_server = {
    "serviceAccount": "service_account/service.json"
 }
 
-firebase = Firebase(config_user)
+# firebase = Firebase(config_user)
 firebase_server = Firebase(config_server)
-
-sample_entry = {
-    "123456": {
-        "name" : "FirstName LastName",
-        "students" : ['studenta', 'studentb', 'studentc']
-    },
-    "234567" : {
-        "name" : "FromServer ToDB",
-        "students" : ['studente', 'studentb', 'studentf'] 
-    }
-}
-
-auth = firebase.auth()
-db = firebase.database()
+# auth = firebase.auth()
+# db = firebase.database()
+auth = firebase_server.auth()
 server_db = firebase_server.database()
-
