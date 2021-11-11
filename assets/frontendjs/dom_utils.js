@@ -22,7 +22,6 @@ export function retrieve_password() {
 
 export function retrieve_registration_select() {
   if (document.getElementById("reg_select") !== null) {
-    loginType = "registration";
     let selector = document.getElementById("reg_select");
     return selector.options[selector.selectedIndex].value === "12"
       ? "Student"
@@ -30,4 +29,26 @@ export function retrieve_registration_select() {
   } else {
     return "Student";
   }
+}
+
+export function ajaxGetRequest(path, callback) {
+  let request = new XMLHttpRequest();
+  request.onreadystatechange = function () {
+    if (this.readyState === 4 && this.status === 200) {
+      callback(this.response);
+    }
+  };
+  request.open("GET", path);
+  request.send();
+}
+
+export function ajaxPostRequest(path, data, callback) {
+  let request = new XMLHttpRequest();
+  request.onreadystatechange = function () {
+    if (this.readyState === 4 && this.status === 200) {
+      callback(this.response);
+    }
+  };
+  request.open("POST", path);
+  request.send(data);
 }

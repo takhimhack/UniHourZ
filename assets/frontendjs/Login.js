@@ -8,14 +8,27 @@ form.addEventListener("submit", (event) => {
   event.preventDefault();
 });
 
-/* Add event listener for submitting login */
-document.getElementById("log in").addEventListener("click", () => {
-  submit_login();
+/* Add an event listener to check the cookie once the page loads */
+document.getElementById("mainBody").addEventListener("load", (event) => {
+  /* Check the user cookie. If they have it, redirect them to landing.html with their information */
+  event.preventDefault();
 });
+
+/* Add event listener for submitting login */
+document.getElementById("log in").addEventListener("click", submit_login);
 
 const login_success_callback = (userCredential) => {
   let user = userCredential.user;
-  console.log(user);
+
+  /* get the email, auth and refresh token */
+  let email = user.email;
+  let authToken = user.accessToken;
+  let refreshToken = user.refreshToken;
+
+  /* set a cookie with this information */
+
+  /* set the location to landing */
+  window.location = "landing.html";
 };
 
 const login_error_callback = (error) => {
@@ -26,26 +39,4 @@ function submit_login() {
   let email = retrieve_email();
   let password = retrieve_password();
   logIn(email, password, login_success_callback, login_error_callback);
-}
-
-function ajaxGetRequest(path, callback) {
-  let request = new XMLHttpRequest();
-  request.onreadystatechange = function () {
-    if (this.readyState === 4 && this.status === 200) {
-      callback(this.response);
-    }
-  };
-  request.open("GET", path);
-  request.send();
-}
-
-function ajaxPostRequest(path, data, callback) {
-  let request = new XMLHttpRequest();
-  request.onreadystatechange = function () {
-    if (this.readyState === 4 && this.status === 200) {
-      callback(this.response);
-    }
-  };
-  request.open("POST", path);
-  request.send(data);
 }
