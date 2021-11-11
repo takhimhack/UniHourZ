@@ -7,10 +7,10 @@ import requests
 
 import server_code.FirebaseAPI.firebaseAPI as fire
 
-
 from server_code.parse_login.parse_login import parse_email
 from server_code import client_validator
 from server_code.FirebaseAPI.Registration import registerUser
+import server_code.FirebaseAPI.firebase_queue as fire_q
 
 
 if __name__ == "__main__":
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     @bottle.route('/assets/<filename:path>')
     def ret_assets(filename):
         return bottle.static_file(filename, "./assets")
-        
+
 
     @bottle.post('/userRegistration')
     def validate_registration():
@@ -49,26 +49,33 @@ if __name__ == "__main__":
                 'valid': 'invalid!'
             })
 
-    @bottle.post('/userLogin')
-    def validate_login():
+    @bottle.post('/queuedata')
+    def return_queue():
         response = bottle.request.body.read().decode()
         decoded_response = client_validator.sanitize_input(response)
-        if client_validator.contains(decoded_response, ['email', 'password']):
-            valid_state = parse_email(decoded_response['email'], 'buffalo.edu')
-            if valid_state != 'valid':
-                return json.dumps({'valid': 'invalid!', 'message': "Enter valid email address"})
-            try:
-                user = fire.auth.sign_in_with_email_and_password(decoded_response["email"], decoded_response["password"])
-                return json.dumps({'valid': 'valid', 'user': decoded_response["email"]})
-            except requests.HTTPError as err:
-                if err.strerror[err.strerror.find("message") + 11:err.strerror.find("message") + 26] == 'EMAIL_NOT_FOUND':
-                    return json.dumps({'valid': 'invalid!', 'message': "Account does not exist"})
-                elif err.strerror[
-                     err.strerror.find("message") + 11:err.strerror.find("message") + 27] == 'INVALID_PASSWORD':
-                    return json.dumps({'valid': 'invalid!', 'message': "Invalid password"})
-                else:
-                    return json.dumps({'valid': 'invalid!', 'message': "Login error"})
-        else:
-            return json.dumps({'valid': 'invalid!', 'message': "Enter email and password"})
+        try:
+            fire.auth.get_account_info(decoded_response['token'])
+        except requests.HTTPError:
+            return json.dumps({'valid': 'invalid'})
+        try:
+            cse220 = fire_q.access_queue('cse220')
+        except fire_q.QueueDoesNotExist:
+            cse220 = ([], 0)
+        try:
+            cse250 = fire_q.access_queue('cse250')
+        except fire_q.QueueDoesNotExist:
+            cse250 = ([], 0)
+        try:
+            cse354 = fire_q.access_queue('cse354')
+        except fire_q.QueueDoesNotExist:
+            cse354 = ([], 0)
+        return json.dumps({
+            'queues': {
+                'CSE220': {'queue': cse220[0], 'length': cse220[1]},
+                'CSE250': {'queue': cse250[0], 'length': cse250[1]},
+                'CSE354': {'queue': cse354[0], 'length': cse354[1]}
+            },
+            'valid': 'valid'
+        })
 
     bottle.run(host="0.0.0.0", port=port)

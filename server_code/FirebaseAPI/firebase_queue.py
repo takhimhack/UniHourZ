@@ -53,7 +53,7 @@ def dequeue_student(class_name):
         raise QueueDoesNotExist
     else:
         current_queue_info = server_db.child("queue").child(class_name).get().val()
-        if int(current_queue_info['length']) < 1: 
+        if int(current_queue_info['length']) < 1:
             raise EmptyQueue
         else:
             ret_student = current_queue_info['queue'][0]
@@ -61,6 +61,3 @@ def dequeue_student(class_name):
             current_queue_info['queue'] = current_queue_info['queue'][1:] if len(current_queue_info) >= 2 else []
             server_db.child("queue").child(class_name).set(current_queue_info)
             return ret_student
-
-
-
