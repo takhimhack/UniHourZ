@@ -5,7 +5,16 @@ export const set_cookie = (authToken, refreshToken, inputEmail, exDays) => {
   let expires = "expires=" + d.toUTCString();
   let email = "email=" + inputEmail;
   document.cookie =
-    authToken + "=" + refreshToken + ";" + email + ";" + expires + ";";
+    "authToken=" +
+    authToken +
+    ";" +
+    "refreshToken=" +
+    refreshToken +
+    ";" +
+    email +
+    ";" +
+    expires +
+    ";";
 };
 
 /* get a key stored in a cookie */
