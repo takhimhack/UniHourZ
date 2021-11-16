@@ -1,10 +1,9 @@
 import sys
 import bottle
 import json
-
-import os
 import requests
-
+#This module decrypts the server files. DO NOT GET RID OF THIS!
+from decryptor import decrypt; decrypt()
 import server_code.FirebaseAPI.firebaseAPI as fire
 
 from server_code.parse_login.parse_login import parse_email
@@ -28,7 +27,13 @@ if __name__ == "__main__":
     def ret_assets(filename):
         return bottle.static_file(filename, "./assets")
 
-
+    @bottle.route('/getConfig')
+    def return_config():
+        data = ""
+        with open("server_configuration_files/config-decrypted.json", "r") as readFile:
+            data = readFile.read()
+        return data
+    
     @bottle.post('/userRegistration')
     def validate_registration():
         response = bottle.request.body.read().decode()

@@ -6,14 +6,16 @@ import {
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-app.js";
 
-const config_user = {
-  apiKey: "AIzaSyB8qHYVB7tIoTKiSwl0pFnc2SZv6rRhZA8",
-  authDomain: "projectdemo-cfd84.firebaseapp.com",
-  databaseURL: "https://projectdemo-cfd84-default-rtdb.firebaseio.com",
-  storageBucket: "projectdemo-cfd84.appspot.com",
-};
+import { ajaxGetRequest } from "./dom_utils.js";
 
-const auth = getAuth(initializeApp(config_user));
+let auth = null;
+
+// send an ajax get request to the server to return config credentials
+ajaxGetRequest("/getConfig", (information) => {
+  let decodedInformation = JSON.parse(information);
+  //decoded information is the config information. Assign auth accordingly
+  auth = getAuth(initializeApp(decodedInformation));
+});
 
 export const logIn = (email, password, success_callback, error_callback) => {
   signInWithEmailAndPassword(auth, email, password)
