@@ -13,11 +13,9 @@ RUN apt-get install -y python3-pip
 RUN apt-get install -y python3-venv
 RUN python3 -m venv cse442env
 RUN cse442env/bin/pip3 install --upgrade pip
-RUN apt-get install -y nodejs
-RUN apt-get install -y npm
-RUN npm install firebase
-COPY requirements.txt requirements.txt
 
+
+COPY requirements.txt requirements.txt
 RUN cse442env/bin/pip3 install -r requirements.txt
 
 COPY . .
