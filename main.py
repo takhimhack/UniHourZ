@@ -1,10 +1,9 @@
 import sys
 import bottle
 import json
-
-import os
 import requests
-
+#This module decrypts the server files. DO NOT GET RID OF THIS!
+from decryptor import decrypt; decrypt()
 import server_code.FirebaseAPI.firebaseAPI as fire
 
 from server_code.parse_login.parse_login import parse_email
