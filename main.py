@@ -3,8 +3,6 @@ from server_code.discord_bot.discord_bot import *
 import threading as th
 from os import environ
 
-fireBaseLock = th.Lock()
-
 def startWebServer():
     app.run(host='0.0.0.0', port=environ.get("PORT") if environ.get("PORT") is not None else 5000)
 
