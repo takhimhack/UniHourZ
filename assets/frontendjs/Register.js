@@ -25,7 +25,6 @@ function submit_registration() {
     password: retrieve_password(),
     typeofUser: retrieve_registration_select(),
   });
-  console.log(json_obj);
   ajaxPostRequest("/userRegistration", json_obj, process_auth_response);
 }
 
