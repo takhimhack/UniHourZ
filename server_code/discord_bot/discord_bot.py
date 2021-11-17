@@ -10,25 +10,7 @@ from discord.ext.commands import has_permissions, CheckFailure, check
 import server_code.FirebaseAPI.firebase_queue as fb
 from flask import Flask
 from threading import Thread
-
-# # # # # # # # # # # # # # # # # # #
-# Flask Server to keep replit alive #
-# # # # # # # # # # # # # # # # # # #
-app = Flask('')
-
-@app.route('/')
-def main():
-	print("REPINGED TO STAY UP")
-	return '*Discord Bot waves to you*'
-
-def startWebServer():
-	app.run(host='0.0.0.0', port=8080, debug=False)
-
-def keep_discord_alive():
-	print("CALLED KEEP ALIVE")
-	thread = Thread(target=startWebServer)
-	thread.start()
-
+from firebase_lock import *
 
 # # # # # # # # # # # # # # # # # # # # # #
 # Discord Bot async requests for commands #
@@ -59,8 +41,11 @@ async def joinqueue(message, *, class_name:str = ""):
 		return
 	
 	try:
+		fireBaseLock.acquire()
 		preQueue = fb.access_queue(class_name)
+		fireBaseLock.release()
 	except:
+		fireBaseLock.release()
 		embed.add_field(name="Failed Joining Queue", value="❌ Error: Course Queue Does Not Exist")
 		await originChannel.send(embed=embed)
 		return
@@ -77,8 +62,14 @@ async def joinqueue(message, *, class_name:str = ""):
 		return
 
 	preLength = preQueue[1]
-	fb.enqueue_student(class_name, "", str(message.author))
-	postLength = fb.access_queue(class_name)[1]
+
+	try:
+		fireBaseLock.acquire()
+		fb.enqueue_student(class_name, "", str(message.author))
+		postLength = fb.access_queue(class_name)[1]
+		fireBaseLock.release()
+	except: 
+		fireBaseLock.release()
 
 	if preLength < postLength:
 		embed.add_field(name="Joining Office Hour Queue", value="You have joined the queue.")
@@ -104,15 +95,23 @@ async def dequeue(message, *, class_name:str = ""):
 		return
 	
 	try:
+		fireBaseLock.acquire()
 		ls = fb.access_queue(class_name)
 		lengthOfQueue = ls[1]
+		fireBaseLock.release()
 	except:
+		fireBaseLock.release()
 		embed.add_field(name="Failed Dequeuing Student", value="❌ Error: Course Queue Does Not Exist")
 		await originChannel.send(embed=embed)	
 		return
 
-	if lengthOfQueue > 0:		
-		reply = fb.dequeue_student(class_name)
+	if lengthOfQueue > 0:
+		try:
+			fireBaseLock.acquire()		
+			reply = fb.dequeue_student(class_name)
+			fireBaseLock.release()
+		except:
+			fireBaseLock.release()
 		embed.add_field(name="Dequeued Student", value=reply['name'])
 		await originChannel.send(embed=embed)
 	else: 
@@ -138,8 +137,11 @@ async def viewqueue(message, *, class_name:str = ""):
 
 
 	try:
+		fireBaseLock.acquire()
 		ls = fb.access_queue(class_name)
+		fireBaseLock.release()
 	except:
+		fireBaseLock.release()
 		embed.add_field(name="Failed Viewing Queue", value="❌ Error: Course Queue Does Not Exist")
 		await originChannel.send(embed=embed)	
 		return
@@ -179,8 +181,11 @@ async def createqueue(message, *, class_name:str = ""):
 		return
 
 	try:
+		fireBaseLock.acquire()
 		returnStat = fb.create_queue(class_name)
+		fireBaseLock.release()
 	except:
+		fireBaseLock.release()
 		embed.add_field(name="Failed Creating Queue", value="❌ Error: Queue Already Exists")
 		await originChannel.send(embed=embed)
 		return
@@ -188,7 +193,3 @@ async def createqueue(message, *, class_name:str = ""):
 	embed=discord.Embed(title=msgTitle)
 	embed.add_field(name="Current Queue:", value=returnStat)
 	await originChannel.send(embed=embed)
-
-
-keep_discord_alive()
-bot.run(os.getenv("TOKEN"))
