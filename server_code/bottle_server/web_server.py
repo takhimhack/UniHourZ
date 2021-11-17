@@ -10,6 +10,7 @@ from server_code.parse_login.parse_login import parse_email
 from server_code import client_validator
 from server_code.FirebaseAPI.Registration import registerUser
 import server_code.FirebaseAPI.firebase_queue as fire_q
+from server_code.firebase_lock import *
 
 app = bottle.Bottle()
 port = int(sys.argv[1]) if len(sys.argv) > 1 else 5000
