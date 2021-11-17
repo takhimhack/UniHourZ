@@ -11,6 +11,6 @@ def startWebServer():
 
 if __name__ == "__main__":
     # Start the web server
-    th.Thread(target=starWebServer).start()
+    th.Thread(target=startWebServer).start()
     #Start Discord Bot
-    bot.run(os.getenv("TOKEN"))
+    bot.run(environ.get("TOKEN"))
