@@ -1,3 +1,3 @@
-from threading import lock
+from threading import Lock
 
 fireBaseLock = Lock()
