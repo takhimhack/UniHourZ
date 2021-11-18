@@ -4,12 +4,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>CSE_442</title>
+    <title>Courses</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
     <link rel="stylesheet" href="assets/css/Login-Form-Dark.css">
     <link rel="stylesheet" href="assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="assets/css/Team-Boxed.css">
+    <link rel="stylesheet" href="assets/css/Social-Icons.css">
+
 </head>
 
 <body>
@@ -17,8 +19,8 @@
         <div class="container"><a class="navbar-brand" href="#" style="color: #ffffff;">UniHourZ</a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-2"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navcol-2">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link" href="#" style="color: var(--bs-white);">All Courses</a></li>
-                    <li class="nav-item"></li>
+                     <li class="nav-item"><a class="nav-link" href="instructor/instructor-version-home.html" style="color: var(--bs-white);">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="courses.html" style="color: var(--bs-white);">Courses</a></li>
                 </ul><span class="navbar-text actions"> <a class="btn btn-light w-100" id ="log out" role="button" style="background: rgb(33, 74, 128);color: var(--bs-white);" href="index.html">Log out</a></span>
             </div>
         </div>
@@ -28,9 +30,15 @@
             <div class="row people">
                 <div class="col-md-6 col-lg-4 item">
                     <div class="box">
-                        <h3 class="name">CSE 250 Queue</h3>
-                        <div class="social"><a href="https://discord.gg/vNycTUuv"><i class="fab fa-discord"></i></a></div>
+                        <h3 class="name">CSE 250 <a href="instructor/cse250-settings.html"><i class="fas fa-cogs"></i></a> </h3>
+                        <h6 id="cse250-instructor">Instructor Name:&nbsp;</h6>
+                        <h6 id="cse250-office">Office Hour Location:&nbsp;</h6>
+                        <h6 id="cse250-eta">Estimated time to help:&nbsp;</h6>
+                        <h6 id="cse250-current-student">Current student being helped:&nbsp;</h6>
+
+                        <h3 style="font-weight: bold;">Queue <button id="cse250-dequeue" class="btn btn-primary btn-sm" type="submit" style="background: var(--bs-red);">Dequeue</button></h3>
                         <ul style="padding: -49px;width: 277.984px;margin: 12px;" id="CSE250q">
+
                             <li id="CSE250q1"></li>
                             <li id="CSE250q2"></li>
                             <li id="CSE250q3"></li>
@@ -48,8 +56,13 @@
                 </div>
                 <div class="col-md-6 col-lg-4 item">
                     <div class="box">
-                        <h3 class="name">CSE 220 Queue</h3>
-                        <div class="social"><a href="https://discord.gg/vNycTUuv"><i class="fab fa-discord"></i></a></div>
+                        <h3 class="name">CSE 220 <a href="instructor/cse220-settings.html"><i style="color: #65F0BD; "class="fas fa-cogs"></i></a> </h3>
+                        <h6 id="cse220-instructor">Instructor Name:&nbsp;</h6>
+                        <h6 id="cse220-office">Office Hour Location:&nbsp;</h6>
+                        <h6 id="cse220-eta">Estimated time to help:&nbsp;</h6>
+                        <h6 id="cse220-current-student">Current student being helped:&nbsp;</h6>
+
+                        <h3 style="font-weight: bold;">Queue <button id="cse220-dequeue" class="btn btn-primary btn-sm" type="submit" style="background: #EB942B;">Dequeue</button></h3>
 
                         <ul style="padding: -49px;width: 277.984px;margin: 12px;" id="CSE220q">
                             <li id="CSE220q1"></li>
@@ -69,8 +82,12 @@
                 </div>
                 <div class="col-md-6 col-lg-4 item">
                     <div class="box">
-                        <h3 class="name">CSE 354 Queue</h3>
-                        <div class="social"><a href="https://discord.gg/vNycTUuv"><i class="fab fa-discord"></i></a></div>
+                        <h3 class="name">CSE 331 <a href="instructor/cse331-settings.html"><i style="color: #C2D655; "class="fas fa-cogs"></i></a> </h3>
+                        <h6 id="cse331-instructor">Instructor Name:&nbsp;</h6>
+                        <h6 id="cse331-office">Office Hour Location:&nbsp;</h6>
+                        <h6 id="cse331-eta">Estimated time to help:&nbsp;</h6>
+                        <h6 id="cse331-current-student">Current student being helped:&nbsp;</h6>
+                        <h3 style="font-weight: bold;">Queue <button id="cse331-dequeue" class="btn btn-primary btn-sm" type="submit" style="background: #007A61;">Dequeue</button></h3>
 
                         <ul style="padding: -49px;width: 277.984px;margin: 12px;" id="CSE354q">
                             <li id="CSE354q1"></li>
@@ -98,3 +115,7 @@
 </body>
 
 </html>
+
+
+
+
