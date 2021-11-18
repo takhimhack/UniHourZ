@@ -11,6 +11,5 @@ if __name__ == "__main__":
     # Start the web server
     th.Thread(target=startWebServer).start()
     #Start Discord Bot
-    bgCheck.start()
     bot.run(environ.get("TOKEN"))
 		
