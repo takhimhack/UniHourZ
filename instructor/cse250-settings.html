@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>CSE 250 Settings</title>
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="../assets/css/Login-Form-Dark.css">
+    <link rel="stylesheet" href="../assets/css/Navigation-with-Button.css">
+    <link rel="stylesheet" href="../assets/css/Team-Boxed.css">
+    <link rel="stylesheet" href="../assets/css/Social-Icons.css">
+
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button" style="background: #1E2833;">
+        <div class="container"><a class="navbar-brand" href="#" style="color: #ffffff;">UniHourZ</a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-2"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-2">
+                <ul class="navbar-nav me-auto">
+                     <li class="nav-item"><a class="nav-link" href="instructor-version-home.html" style="color: var(--bs-white);">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="../courses.html" style="color: var(--bs-white);">Courses</a></li>
+                </ul><span class="navbar-text actions"> <a class="btn btn-light w-100" id ="log out" role="button" style="background: rgb(33, 74, 128);color: var(--bs-white);" href="../index.html">Log out</a></span>
+            </div>
+        </div>
+    </nav>
+    <section class="team-boxed">
+        <div class="container">
+            <div class="row people">
+                <div class="col-md-6 col-lg-4 offset-lg-4 item">
+                    <div class="box">
+                        <h3 class="name">CSE 250 Settings</h3>
+                
+
+<form class="form-horizontal">
+  <div class="form-group">
+      <input class="form-control" id="instructor-name-250"placeholder="Enter Instructor Name" style="width: 330px;margin: 7px;" disabled>
+  </div>
+  <div class="form-group">
+      <input class="form-control"  id="office-location-250"placeholder="Office hours location" style="margin: 7px;width: 330px;" disabled>
+  </div>
+
+  <div class="form-group">
+      <input class="form-control" id="estimated-time-250"placeholder="Estimated time to help (Enter number only)" style="margin: 7px;width: 330px;" disabled>
+  </div>
+
+
+<div class="form-group">
+      <button type="edit" class="btn btn-primary" style="margin: 14px;" id="editcse250" onclick="return cse250()">Edit</button>
+
+      <button type="submit" class="btn btn-success" style="margin: 14px;" id="savecse250" hidden>Save</button>
+
+
+  </div>
+
+
+
+<div class="form-check form-switch">
+  <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+  <label class="form-check-label" for="flexSwitchCheckDefault">Open/Close CSE 250 Office hours</label>
+</div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+ 
+</body>
+
+    <script type="text/javascript" src="../assets/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../assets/class-settings/class-settings.js"></script>
+
+
+</html>
