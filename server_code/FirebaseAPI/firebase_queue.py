@@ -61,3 +61,13 @@ def dequeue_student(class_name):
             current_queue_info['queue'] = current_queue_info['queue'][1:] if len(current_queue_info) >= 2 else []
             server_db.child("queue").child(class_name).set(current_queue_info)
             return ret_student
+
+
+def change_queue_settings(settings):
+    if (server_db.child("queue").get().val() is None or server_db.child("queue").child(settings["class_name"]).get().val() is None):
+        raise QueueDoesNotExist
+    else:
+        current_queue_info = server_db.child("queue").child(settings["class_name"]).get().val()
+        current_queue_info["status"] = settings["status"]
+        current_queue_info["eta"] = settings["eta"]
+        current_queue_info["instructors"] = settings["instructors"]
