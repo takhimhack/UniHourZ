@@ -10,7 +10,7 @@ from discord.ext.commands import has_permissions, CheckFailure, check
 import server_code.FirebaseAPI.firebase_queue as fb
 from flask import Flask
 from threading import Thread
-from firebase_lock import *
+from server_code.firebase_lock import *
 
 # # # # # # # # # # # # # # # # # # # # # #
 # Discord Bot async requests for commands #
