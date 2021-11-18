@@ -23,4 +23,4 @@ COPY . .
 EXPOSE $PORT
 
 #Run main.py
-CMD cse442env/bin/python3 main.py $PORT
+CMD cse442env/bin/python3 main.py

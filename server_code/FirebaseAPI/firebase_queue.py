@@ -29,6 +29,19 @@ def access_queue(class_name):
         return (queue_info.get("queue", []), queue_info.get("length"))
 
 '''
+params: class_name: string
+return val: A list of student dictionaries representing the queue of students
+'''
+def access_course(class_name):
+    #if the queue doesn't exist, we throw an exception
+    if(server_db.child("queue").get().val() is None or server_db.child("queue").child(class_name).get().val() is None):
+        raise QueueDoesNotExist
+    else:
+        queue_info = server_db.child("queue").child(class_name).get().val()
+        return (queue_info.get("queue", []), queue_info.get("length"))
+
+
+'''
 params: class_name: string, ubit_student: string, name: string
 return val: Nothing
 '''
@@ -61,13 +74,3 @@ def dequeue_student(class_name):
             current_queue_info['queue'] = current_queue_info['queue'][1:] if len(current_queue_info) >= 2 else []
             server_db.child("queue").child(class_name).set(current_queue_info)
             return ret_student
-
-
-def change_queue_settings(settings):
-    if (server_db.child("queue").get().val() is None or server_db.child("queue").child(settings["class_name"]).get().val() is None):
-        raise QueueDoesNotExist
-    else:
-        current_queue_info = server_db.child("queue").child(settings["class_name"]).get().val()
-        current_queue_info["status"] = settings["status"]
-        current_queue_info["eta"] = settings["eta"]
-        current_queue_info["instructors"] = settings["instructors"]
