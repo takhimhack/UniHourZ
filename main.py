@@ -39,7 +39,7 @@ if __name__ == "__main__":
         response = bottle.request.body.read().decode()
         decoded_response = client_validator.sanitize_input(response)
         # check if registering
-        if client_validator.contains(decoded_response, ['email', 'name', 'password', 'typeofUser']):
+        if client_validator.contains(decoded_response, ['email', 'name', 'password', 'typeofUser', 'discordName']):
             valid_state = parse_email(decoded_response['email'], 'buffalo.edu')
             if valid_state != 'valid':
                 return json.dumps({
