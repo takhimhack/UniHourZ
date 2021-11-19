@@ -30,13 +30,33 @@ const login_success_callback = (userCredential) => {
   set_cookie("refreshToken", refreshToken, 10);
 
   /* set the location to landing */
-  window.location = "landing.html";
-  console.log(get_cookie("email"));
+  let pdata = JSON.stringify({token: authToken});
+  ajaxPostRequest('/checkstatus', pdata, redirect_page);
 };
 
 const login_error_callback = (error) => {
   document.getElementById("errorf").innerHTML = "*Email or Password Invalid.";
 };
+
+function redirect_page(server_response){
+    let decoded = JSON.parse(server_response);
+    if (decoded.valid === 'valid'){
+        window.location = "/instructor/instructor-version-home.html";
+    } else {
+        window.location = "/student/student-version-home.html";
+    }
+}
+
+function ajaxPostRequest(path, data, callback) {
+    let request = new XMLHttpRequest();
+    request.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            callback(this.response);
+        }
+    };
+    request.open("POST", path);
+    request.send(data);
+}
 
 function submit_login() {
   let email = retrieve_email();

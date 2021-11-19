@@ -3,7 +3,31 @@ function loadpage() {
     ajaxPostRequest('/queuedata', pdata, process_queue_data);
     setTimeout(loadpage, 10000);
 }
+onload_func();
 loadpage();
+
+function onload_func() {
+    let pdata = JSON.stringify({token: getCookie("authToken")});
+    ajaxPostRequest('/checkstatus', pdata, html_setup);
+}
+
+function html_setup(setup_response) {
+    let decoded = JSON.parse(setup_response);
+    if (decoded.valid === 'valid'){
+        let doms = document.getElementsByTagName('button');
+        for (var k = 0; k < doms.length; k++) {
+            if (doms[k].hasAttribute("studenthidden")) {
+                doms[k].removeAttribute('hidden');
+            }
+        }
+        doms = document.getElementsByTagName('a');
+        for (var k = 0; k < doms.length; k++) {
+            if (doms[k].hasAttribute("studenthidden")) {
+                doms[k].removeAttribute('hidden');
+            }
+        }
+    }
+}
 
 function process_queue_data(queue_response) {
     let decoded = JSON.parse(queue_response);
@@ -36,6 +60,21 @@ function getCookie(cname) {
         }
     }
     return "";
+}
+
+function dequeue_250(){
+    let pdata = JSON.stringify({token: getCookie("authToken"), class: "cse250"});
+    ajaxPostRequest('/dequeue', pdata, process_queue_data);
+}
+
+function dequeue_220(){
+    let pdata = JSON.stringify({token: getCookie("authToken"), class: "cse220"});
+    ajaxPostRequest('/dequeue', pdata, process_queue_data);
+}
+
+function dequeue_331(){
+    let pdata = JSON.stringify({token: getCookie("authToken"), class: "cse331"});
+    ajaxPostRequest('/dequeue', pdata, process_queue_data);
 }
 
 function ajaxPostRequest(path, data, callback) {

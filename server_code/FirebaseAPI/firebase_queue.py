@@ -26,7 +26,7 @@ def access_queue(class_name):
         raise QueueDoesNotExist
     else:
         queue_info = server_db.child("queue").child(class_name).get().val()
-        return (queue_info.get("queue", []), queue_info.get("length"))
+        return (queue_info.get("queue", []), queue_info.get("length"), queue_info.get("instructor"), queue_info.get("location"), queue_info.get("eta"))
 
 '''
 params: class_name: string, ubit_student: string, name: string
@@ -64,10 +64,16 @@ def dequeue_student(class_name):
 
 
 def change_queue_settings(settings):
-    if (server_db.child("queue").get().val() is None or server_db.child("queue").child(settings["class_name"]).get().val() is None):
+    if server_db.child("queue").get().val() is None or server_db.child("queue").child(settings["class_name"]).get().val() is None:
         raise QueueDoesNotExist
     else:
         current_queue_info = server_db.child("queue").child(settings["class_name"]).get().val()
         current_queue_info["status"] = settings["status"]
         current_queue_info["eta"] = settings["eta"]
         current_queue_info["instructors"] = settings["instructors"]
+
+
+def is_instructor(uid):
+    if server_db.child("Instructors").get().val() is None or server_db.child("Instructors").child(uid).get().val() is None:
+        return False
+    return False

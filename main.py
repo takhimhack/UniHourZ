@@ -27,6 +27,14 @@ if __name__ == "__main__":
     def ret_assets(filename):
         return bottle.static_file(filename, "./assets")
 
+    @bottle.route('/instructor/<filename:path>')
+    def ret_assets(filename):
+        return bottle.static_file(filename, "./instructor")
+
+    @bottle.route('/student/<filename:path>')
+    def ret_assets(filename):
+        return bottle.static_file(filename, "./student")
+
     @bottle.route('/getConfig')
     def return_config():
         data = ""
@@ -62,23 +70,14 @@ if __name__ == "__main__":
             fire.auth.get_account_info(decoded_response['token'])
         except requests.HTTPError:
             return json.dumps({'valid': 'invalid'})
-        try:
-            cse220 = fire_q.access_queue('cse220')
-        except fire_q.QueueDoesNotExist:
-            cse220 = ([], 0)
-        try:
-            cse250 = fire_q.access_queue('cse250')
-        except fire_q.QueueDoesNotExist:
-            cse250 = ([], 0)
-        try:
-            cse354 = fire_q.access_queue('cse354')
-        except fire_q.QueueDoesNotExist:
-            cse354 = ([], 0)
+        cse220 = fire_q.access_queue('cse220')
+        cse250 = fire_q.access_queue('cse250')
+        cse331 = fire_q.access_queue('cse331')
         return json.dumps({
             'queues': {
-                'CSE220': {'queue': cse220[0], 'length': cse220[1]},
-                'CSE250': {'queue': cse250[0], 'length': cse250[1]},
-                'CSE354': {'queue': cse354[0], 'length': cse354[1]}
+                'CSE220': {'queue': cse220[0], 'length': cse220[1], 'instructor': cse220[2], 'location': cse220[3], 'eta': cse220[4]},
+                'CSE250': {'queue': cse250[0], 'length': cse250[1], 'instructor': cse250[2], 'location': cse250[3], 'eta': cse250[4]},
+                'CSE331': {'queue': cse331[0], 'length': cse331[1], 'instructor': cse331[2], 'location': cse331[3], 'eta': cse331[4]}
             },
             'valid': 'valid'
         })
@@ -94,7 +93,10 @@ if __name__ == "__main__":
             return json.dumps({'valid': 'invalid'})
         if info["typeofUser"] != "Instructor":
             return json.dumps({'valid': 'invalid'})
-        next_student = fire_q.dequeue_student(decoded_response['class'])
+        try:
+            next_student = fire_q.dequeue_student(decoded_response['class'])
+        except fire_q.EmptyQueue:
+            return json.dumps({'valid': 'invalid'})
         try:
             cse220 = fire_q.access_queue('cse220')
         except fire_q.QueueDoesNotExist:
@@ -126,9 +128,25 @@ if __name__ == "__main__":
             info = fire.auth.get_account_info(decoded_response['token'])
         except requests.HTTPError:
             return
-        if info["typeofUser"] != "Instructor":
+        if fire_q.is_instructor(info['users'][0]['localId']):
+            fire_q.change_queue_settings(decoded_response)
+            return json.dumps({'valid': 'valid'})
+        else:
             return json.dumps({'valid': 'invalid'})
-        fire_q.change_queue_settings(decoded_response)
+
+
+    @bottle.post('/checkstatus')
+    def load_courses():
+        response = bottle.request.body.read().decode()
+        decoded_response = client_validator.sanitize_input(response)
+        try:
+            info = fire.auth.get_account_info(decoded_response['token'])
+        except requests.HTTPError:
+            return
+        if fire_q.is_instructor(info['users'][0]['localId']):
+            return json.dumps({'valid': 'valid'})
+        else:
+            return json.dumps({'valid': 'invalid'})
 
 
     bottle.run(host="0.0.0.0", port=port)
