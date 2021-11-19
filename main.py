@@ -23,6 +23,35 @@ if __name__ == "__main__":
     def ret_html_2(filename):
         return bottle.static_file(filename, ".") if ".html" in filename else None
 
+    @bottle.route('/instructor/<filename>')
+    def ret_instructor(filename):
+        #note: upon logging into the app, we can redirect to this if the request was made with an instructor account.
+        #get the auth token from the cookie
+        authToken = bottle.request.get_cookie("authToken")
+        
+        #If auth token none, we abort
+        if authToken is None:
+            bottle.abort(code=403, text="We're sorry, but you don't have the permissions to view this page.")
+        
+        #Get the account information from the authToken. Throws requests.HTTPError if failure.
+        #Catch this error and abort.
+        account_info = "" 
+        try:
+            account_info = fire.auth.get_account_info(authToken)
+        
+        except requests.HTTPError:
+            bottle.abort(code=403, text="We're sorry, but you don't have the permissions to view this page.")
+        
+        # Now query the firebase database. Access users -> 0 -> localId. 
+        # If this localId is not under instructors, we abort.
+        localId = account_info['users'][0]['localId']
+
+        if fire.server_db.child("Instructors").child(localId).get().val() is None:
+            bottle.abort(code=403, text="We're sorry, but you don't have the permissions to view this page.")
+            
+        else:
+            return bottle.static_file(filename, "./instructor")
+
     @bottle.route('/assets/<filename:path>')
     def ret_assets(filename):
         return bottle.static_file(filename, "./assets")
