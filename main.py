@@ -62,22 +62,26 @@ if __name__ == "__main__":
                 'valid': 'invalid!'
             })
 
-    @bottle.post('/queuedata')
+    @bottle.route('/queuedata')
     def return_queue():
-        response = bottle.request.body.read().decode()
-        decoded_response = client_validator.sanitize_input(response)
+        auth_token = bottle.request.get_cookie("authToken")
+        if auth_token is None:
+            bottle.abort(code=403, text="We're sorry, but you don't have the permissions to view this page.")
         try:
-            fire.auth.get_account_info(decoded_response['token'])
+            fire.auth.get_account_info(auth_token)
         except requests.HTTPError:
-            return json.dumps({'valid': 'invalid'})
+            bottle.abort(code=403, text="We're sorry, but you don't have the permissions to view this page.")
         cse220 = fire_q.access_queue('cse220')
         cse250 = fire_q.access_queue('cse250')
         cse331 = fire_q.access_queue('cse331')
         return json.dumps({
             'queues': {
-                'CSE220': {'queue': cse220[0], 'length': cse220[1], 'instructor': cse220[2], 'location': cse220[3], 'eta': cse220[4]},
-                'CSE250': {'queue': cse250[0], 'length': cse250[1], 'instructor': cse250[2], 'location': cse250[3], 'eta': cse250[4]},
-                'CSE331': {'queue': cse331[0], 'length': cse331[1], 'instructor': cse331[2], 'location': cse331[3], 'eta': cse331[4]}
+                'CSE220': {'queue': cse220[0], 'length': cse220[1], 'instructor': cse220[2], 'location': cse220[3],
+                           'eta': cse220[4], 'student': cse220[5], 'status': cse220[6]},
+                'CSE250': {'queue': cse250[0], 'length': cse250[1], 'instructor': cse250[2], 'location': cse250[3],
+                           'eta': cse250[4], 'student': cse250[5], 'status': cse250[6]},
+                'CSE331': {'queue': cse331[0], 'length': cse331[1], 'instructor': cse331[2], 'location': cse331[3],
+                           'eta': cse331[4], 'student': cse331[5], 'status': cse331[6]}
             },
             'valid': 'valid'
         })
@@ -91,29 +95,23 @@ if __name__ == "__main__":
             info = fire.auth.get_account_info(decoded_response['token'])
         except requests.HTTPError:
             return json.dumps({'valid': 'invalid'})
-        if info["typeofUser"] != "Instructor":
-            return json.dumps({'valid': 'invalid'})
+        if not fire_q.is_instructor(info['users'][0]['localId']):
+            return bottle.abort(code=403, text="We're sorry, but you don't have the permissions to view this page.")
         try:
             next_student = fire_q.dequeue_student(decoded_response['class'])
         except fire_q.EmptyQueue:
             return json.dumps({'valid': 'invalid'})
-        try:
-            cse220 = fire_q.access_queue('cse220')
-        except fire_q.QueueDoesNotExist:
-            cse220 = ([], 0)
-        try:
-            cse250 = fire_q.access_queue('cse250')
-        except fire_q.QueueDoesNotExist:
-            cse250 = ([], 0)
-        try:
-            cse354 = fire_q.access_queue('cse354')
-        except fire_q.QueueDoesNotExist:
-            cse354 = ([], 0)
+        cse220 = fire_q.access_queue('cse220')
+        cse250 = fire_q.access_queue('cse250')
+        cse331 = fire_q.access_queue('cse331')
         return json.dumps({
             'queues': {
-                'CSE220': {'queue': cse220[0], 'length': cse220[1]},
-                'CSE250': {'queue': cse250[0], 'length': cse250[1]},
-                'CSE354': {'queue': cse354[0], 'length': cse354[1]}
+                'CSE220': {'queue': cse220[0], 'length': cse220[1], 'instructor': cse220[2], 'location': cse220[3],
+                           'eta': cse220[4]},
+                'CSE250': {'queue': cse250[0], 'length': cse250[1], 'instructor': cse250[2], 'location': cse250[3],
+                           'eta': cse250[4]},
+                'CSE331': {'queue': cse331[0], 'length': cse331[1], 'instructor': cse331[2], 'location': cse331[3],
+                           'eta': cse331[4]}
             },
             'student': next_student,
             'valid': 'valid'
@@ -124,25 +122,32 @@ if __name__ == "__main__":
     def change_settings():
         response = bottle.request.body.read().decode()
         decoded_response = client_validator.sanitize_input(response)
+        print(decoded_response)
         try:
             info = fire.auth.get_account_info(decoded_response['token'])
         except requests.HTTPError:
-            return
+            return bottle.abort(403, "You don't have permission to view this page.")
         if fire_q.is_instructor(info['users'][0]['localId']):
-            fire_q.change_queue_settings(decoded_response)
-            return json.dumps({'valid': 'valid'})
+            if decoded_response["edit"] == "true":
+                fire_q.change_queue_settings(decoded_response)
+            else:
+                queue_info = fire_q.access_queue(decoded_response["class"])
+                return json.dumps({'instructor': queue_info[2], 'location': queue_info[3], 'eta': queue_info[4], 'status': queue_info[6]})
+            # return json.dumps({'valid': 'valid'})
         else:
-            return json.dumps({'valid': 'invalid'})
+            return bottle.abort(403, "You don't have permission to view this page.")
 
 
-    @bottle.post('/checkstatus')
-    def load_courses():
-        response = bottle.request.body.read().decode()
-        decoded_response = client_validator.sanitize_input(response)
+    @bottle.route('/checkstatus')
+    def get_privilege():
+        auth_token = bottle.request.get_cookie("authToken")
+        if auth_token is None:
+            bottle.abort(code=403, text="We're sorry, but you don't have the permissions to view this page.")
         try:
-            info = fire.auth.get_account_info(decoded_response['token'])
+            info = fire.auth.get_account_info(auth_token)
+            print(info)
         except requests.HTTPError:
-            return
+            return bottle.abort(403, "You don't have permission to view this page.")
         if fire_q.is_instructor(info['users'][0]['localId']):
             return json.dumps({'valid': 'valid'})
         else:

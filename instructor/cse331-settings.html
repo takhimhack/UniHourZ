@@ -14,7 +14,7 @@
 
 </head>
 
-<body>
+<body id="cse331">
     <nav class="navbar navbar-light navbar-expand-md navigation-clean-button" style="background: #1E2833;">
         <div class="container"><a class="navbar-brand" href="#" style="color: #ffffff;">UniHourZ</a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-2"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navcol-2">
@@ -31,35 +31,53 @@
                 <div class="col-md-6 col-lg-4 offset-lg-4 item">
                     <div class="box">
                         <h3 class="name">CSE 331 Settings</h3>
-                
-
-<form class="form-horizontal">
-  <div class="form-group">
-      <input class="form-control" id="instructor-name-331"placeholder="Enter Instructor Name" style="width: 330px;margin: 7px;" disabled>
-  </div>
-  <div class="form-group">
-      <input class="form-control"  id="office-location-331"placeholder="Office hours location" style="margin: 7px;width: 330px;" disabled>
-  </div>
-
-  <div class="form-group">
-      <input class="form-control" id="estimated-time-331"placeholder="Estimated time to help (Enter number only)" style="margin: 7px;width: 330px;" disabled>
-  </div>
-
-
-<div class="form-group">
-      <button type="edit" class="btn btn-primary" style="margin: 14px;" id="editcse331" onclick="return cse331()">Edit</button>
-
-      <button type="submit" class="btn btn-success" style="margin: 14px;" id="savecse331" hidden>Save</button>
-
-
-  </div>
-
-
-
+<p></p>
 <div class="form-check form-switch">
-  <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+  <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" disabled>
   <label class="form-check-label" for="flexSwitchCheckDefault">Open/Close CSE 331 Office hours</label>
 </div>
+<p></p>
+
+<form class="form-floating">
+    <div class="form-floating mb-3">
+      <input class="form-control" id="instructor-name" placeholder="name@example.com" value="" disabled>
+      <label for="instructor-name">Instructor</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input class="form-control" id="office-location" placeholder="name@example.com" value="" disabled>
+      <label for="office-location">Location</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input class="form-control" id="estimated-time" placeholder="name@example.com" value="" disabled>
+      <label for="estimated-time">Estimated Time</label>
+    </div>
+</form>
+
+<!--<form class="form-floating">-->
+<!--  <div class="form-floating mb-3">-->
+<!--      <label for="instructor-name">Instructor name</label>-->
+<!--      <input class="form-control" id="instructor-name" placeholder="Enter Instructor Name" value="INASdf" style="width: 330px;margin: 7px;" disabled>-->
+<!--  </div>-->
+<!--  <div class="form-floating mb-3">-->
+<!--      <label for="office-location">Location</label>-->
+<!--      <input class="form-control"  id="office-location" placeholder="Office hours location" style="margin: 7px;width: 330px;" disabled>-->
+<!--  </div>-->
+<!--  <div class="form-floating mb-3">-->
+<!--      <label for="estimated-time">Estimated wait time in minutes</label>-->
+<!--      <input class="form-control" id="estimated-time" placeholder="Estimated time to help (Enter number only)" style="margin: 7px;width: 330px;" disabled>-->
+<!--  </div>-->
+<!--</form>-->
+
+<div class="form-group">
+      <button type="edit" class="btn btn-primary" style="margin: 14px;" id="editcse" onclick="toggle();">Edit</button>
+
+      <button type="submit" class="btn btn-success" style="margin: 14px;" id="savecse" onclick="submit_changes();" hidden>Save</button>
+
+
+  </div>
+
+
+
 
 
                     </div>

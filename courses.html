@@ -29,79 +29,84 @@
         <div class="container">
             <div class="row people">
                 <div class="col-md-6 col-lg-4 item">
-                    <div class="box">
+                    <div class="box" id="CSE250box">
                         <h3 class="name">CSE 250 <a href="instructor/cse250-settings.html" studenthidden="true" hidden><i class="fas fa-cogs"></i></a> </h3>
-                        <h6 id="cse250-instructor">Instructor Name:&nbsp;</h6>
-                        <h6 id="cse250-office">Office Hour Location:&nbsp;</h6>
-                        <h6 id="cse250-eta">Estimated time to help:&nbsp;</h6>
-                        <h6 id="cse250-current-student">Current student being helped:&nbsp;</h6>
+                        <h6 class="text-start">Instructor Name:&nbsp;<span id="CSE250-instructor"></span></h6>
+                        <h6 class="text-start">Office Hour Location:&nbsp;<span id="CSE250-office"></span></h6>
+                        <h6 class="text-start">Estimated time to help:&nbsp;<span id="CSE250-eta"></span></h6>
+                        <h6 class="text-start">Current student being helped:&nbsp;<span id="CSE250-current-student"></span></h6>
+                        <p class="description"></p>
                         <h3 style="font-weight: bold;">Queue <button id="cse250-dequeue" class="btn btn-primary btn-sm" type="submit" style="background: var(--bs-red);" onclick="dequeue_cse250();" studenthidden="true" hidden>Dequeue</button></h3>
-                        <ul style="padding: -49px;width: 277.984px;margin: 12px;" id="CSE250q">
-                            <li id="CSE250q1"></li>
-                            <li id="CSE250q2"></li>
-                            <li id="CSE250q3"></li>
-                            <li id="CSE250q4"></li>
-                            <li id="CSE250q5"></li>
-                            <li id="CSE250q6"></li>
-                            <li id="CSE250q7"></li>
-                            <li id="CSE250q8"></li>
-                            <li id="CSE250q9"></li>
-                            <li id="CSE250q10"></li>
+                        <ul style="padding: -49px;width: 277.984px;margin: 12px;" id="CSE250q" hidden="">
+                            <li id="CSE250q1" class="text-start"></li>
+                            <li id="CSE250q2" class="text-start"></li>
+                            <li id="CSE250q3" class="text-start"></li>
+                            <li id="CSE250q4" class="text-start"></li>
+                            <li id="CSE250q5" class="text-start"></li>
+                            <li id="CSE250q6" class="text-start"></li>
+                            <li id="CSE250q7" class="text-start"></li>
+                            <li id="CSE250q8" class="text-start"></li>
+                            <li id="CSE250q9" class="text-start"></li>
+                            <li id="CSE250q10" class="text-start"></li>
                         </ul>
                         <p class="description"></p>
                         <ul class="list-group"></ul>
+                        <h5 style="color: Tomato" id="CSE250closed">The queue is currently closed</h5>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-4 item">
-                    <div class="box">
-                        <h3 class="name">CSE 220 <a href="instructor/cse220-settings.html" studenthidden="true" hidden><i style="color: #65F0BD; "class="fas fa-cogs"></i></a> </h3>
-                        <h6 id="cse220-instructor">Instructor Name:&nbsp;</h6>
-                        <h6 id="cse220-office">Office Hour Location:&nbsp;</h6>
-                        <h6 id="cse220-eta">Estimated time to help:&nbsp;</h6>
-                        <h6 id="cse220-current-student">Current student being helped:&nbsp;</h6>
-
-                        <h3 style="font-weight: bold;">Queue <button id="cse220-dequeue" class="btn btn-primary btn-sm" type="submit" style="background: #EB942B;" studenthidden="true" hidden>Dequeue</button></h3>
-
-                        <ul style="padding: -49px;width: 277.984px;margin: 12px;" id="CSE220q">
-                            <li id="CSE220q1"></li>
-                            <li id="CSE220q2"></li>
-                            <li id="CSE220q3"></li>
-                            <li id="CSE220q4"></li>
-                            <li id="CSE220q5"></li>
-                            <li id="CSE220q6"></li>
-                            <li id="CSE220q7"></li>
-                            <li id="CSE220q8"></li>
-                            <li id="CSE220q9"></li>
-                            <li id="CSE220q10"></li>
+                    <div class="box" id="CSE220box">
+                        <h3 class="name">CSE 220 <a href="instructor/cse220-settings.html" studenthidden="true" hidden><i style="color: #65F0BD; " class="fas fa-cogs"></i></a> </h3>
+                        <h6 class="text-start">Instructor Name:&nbsp;<span id="CSE220-instructor"></span></h6>
+                        <h6 class="text-start">Office Hour Location:&nbsp;<span id="CSE220-office"></span></h6>
+                        <h6 class="text-start">Estimated time to help:&nbsp;<span id="CSE220-eta"></span></h6>
+                        <h6 class="text-start">Current student being helped:&nbsp;<span id="CSE220-current-student"></span></h6>
+                        <p class="description"></p>
+                        <h3 style="font-weight: bold;">Queue <button id="cse220-dequeue" class="btn btn-primary btn-sm" type="submit" style="background: #EB942B;" onclick="dequeue_cse220();" studenthidden="true" hidden>Dequeue</button></h3>
+                        <ul style="padding: -49px;width: 277.984px;margin: 12px;" id="CSE220q" hidden="">
+                            <li id="CSE220q1" class="text-start"></li>
+                            <li id="CSE220q2" class="text-start"></li>
+                            <li id="CSE220q3" class="text-start"></li>
+                            <li id="CSE220q4" class="text-start"></li>
+                            <li id="CSE220q5" class="text-start"></li>
+                            <li id="CSE220q6" class="text-start"></li>
+                            <li id="CSE220q7" class="text-start"></li>
+                            <li id="CSE220q8" class="text-start"></li>
+                            <li id="CSE220q9" class="text-start"></li>
+                            <li id="CSE220q10" class="text-start"></li>
                         </ul>
                         <p class="description"></p>
                         <ul class="list-group"></ul>
+                        <h5 style="color: Tomato" id="CSE220closed">The queue is currently closed</h5>
                     </div>
+
                 </div>
                 <div class="col-md-6 col-lg-4 item">
-                    <div class="box">
-                        <h3 class="name">CSE 331 <a href="instructor/cse331-settings.html" studenthidden="true" hidden><i style="color: #C2D655; "class="fas fa-cogs"></i></a> </h3>
-                        <h6 id="cse331-instructor">Instructor Name:&nbsp;</h6>
-                        <h6 id="cse331-office">Office Hour Location:&nbsp;</h6>
-                        <h6 id="cse331-eta">Estimated time to help:&nbsp;</h6>
-                        <h6 id="cse331-current-student">Current student being helped:&nbsp;</h6>
-                        <h3 style="font-weight: bold;">Queue <button id="cse331-dequeue" class="btn btn-primary btn-sm" type="submit" style="background: #007A61;" studenthidden="true" hidden>Dequeue</button></h3>
-
-                        <ul style="padding: -49px;width: 277.984px;margin: 12px;" id="CSE331q">
-                            <li id="CSE331q1"></li>
-                            <li id="CSE331q2"></li>
-                            <li id="CSE331q3"></li>
-                            <li id="CSE331q4"></li>
-                            <li id="CSE331q5"></li>
-                            <li id="CSE331q6"></li>
-                            <li id="CSE331q7"></li>
-                            <li id="CSE331q8"></li>
-                            <li id="CSE331q9"></li>
-                            <li id="CSE331q10"></li>
+                    <div class="box" id="CSE331box">
+                        <h3 class="name">CSE 331 <a href="instructor/cse331-settings.html" studenthidden="true" hidden><i style="color: #C2D655; " class="fas fa-cogs"></i></a> </h3>
+                        <h6 class="text-start">Instructor Name:&nbsp;<span id="CSE331-instructor"></span></h6>
+                        <h6 class="text-start">Office Hour Location:&nbsp;<span id="CSE331-office"></span></h6>
+                        <h6 class="text-start">Estimated time to help:&nbsp;<span id="CSE331-eta"></span></h6>
+                        <h6 class="text-start">Current student being helped:&nbsp;<span id="CSE331-current-student"></span></h6>
+                        <p class="description"></p>
+                        <h3 style="font-weight: bold;">Queue <button id="cse331-dequeue" class="btn btn-primary btn-sm" type="submit" onclick="dequeue_cse331();" style="background: #007A61;" studenthidden="true" hidden>Dequeue</button></h3>
+                        <ul style="padding: -49px;width: 277.984px;margin: 12px;" id="CSE331q" hidden="">
+                            <li id="CSE331q1" class="text-start"></li>
+                            <li id="CSE331q2" class="text-start"></li>
+                            <li id="CSE331q3" class="text-start"></li>
+                            <li id="CSE331q4" class="text-start"></li>
+                            <li id="CSE331q5" class="text-start"></li>
+                            <li id="CSE331q6" class="text-start"></li>
+                            <li id="CSE331q7" class="text-start"></li>
+                            <li id="CSE331q8" class="text-start"></li>
+                            <li id="CSE331q9" class="text-start"></li>
+                            <li id="CSE331q10" class="text-start"></li>
                         </ul>
                         <p class="description"></p>
                         <ul class="list-group"></ul>
+                        <h5 style="color: Tomato" id="CSE331closed">The queue is currently closed</h5>
                     </div>
+
                 </div>
             </div>
         </div>
