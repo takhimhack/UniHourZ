@@ -20,22 +20,19 @@ document.getElementById("log in").addEventListener("click", submit_login);
 const login_success_callback = (userCredential) => {
   let user = userCredential.user;
 
-  /* get the email, auth and refresh token */
-  // let email = user.email;
-  let authToken = user.accessToken;
-  let refreshToken = user.refreshToken;
-
+  /* get the auth token and force a refresh */
   /* set a cookie with this information */
-  set_cookie("authToken", authToken, 10);
-  set_cookie("refreshToken", refreshToken, 10);
 
-  /* set the location to landing */
-  let pdata = JSON.stringify({token: authToken});
-  ajaxPostRequest('/checkstatus', pdata, redirect_page);
+  user.getIdToken(true).then((userAuthToken) => {
+    set_cookie("authToken", userAuthToken, 10);
+  });
+
+  /* Send a get request to get the right page. */
 };
 
 const login_error_callback = (error) => {
-  document.getElementById("errorf").innerHTML = "*Email or Password Invalid.";
+  document.getElementById("errorf").innerHTML =
+    "*Email or Password Invalid." + error;
 };
 
 function redirect_page(server_response){
