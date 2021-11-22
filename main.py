@@ -1,4 +1,3 @@
-from os import abort
 import sys
 import bottle
 import json
