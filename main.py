@@ -24,7 +24,7 @@ if __name__ == "__main__":
         if filename.endswith(".html"):
             return bottle.static_file(filename, ".") 
         else:
-            bottle.abort(status=404, text="The requested file does not exist")
+            bottle.abort(code=404, text="The requested file does not exist")
 
     @bottle.route('/instructor/<filename>')
     def ret_instructor(filename):
