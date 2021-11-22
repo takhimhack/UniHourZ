@@ -26,7 +26,7 @@ def access_queue(class_name):
         raise QueueDoesNotExist
     else:
         queue_info = server_db.child("queue").child(class_name).get().val()
-        return (queue_info.get("queue", []), queue_info.get("length"))
+        return (queue_info.get("queue", []), queue_info.get("length"), queue_info.get("instructor"), queue_info.get("location"), queue_info.get("eta"), queue_info.get("student"), queue_info.get("status"))
 
 '''
 params: class_name: string, ubit_student: string, name: string
@@ -57,6 +57,7 @@ def dequeue_student(class_name):
             raise EmptyQueue
         else:
             ret_student = current_queue_info['queue'][0]
+            current_queue_info['student'] = ret_student['name']
             current_queue_info['length'] = int(current_queue_info['length']) - 1
             current_queue_info['queue'] = current_queue_info['queue'][1:] if len(current_queue_info) >= 2 else []
             server_db.child("queue").child(class_name).set(current_queue_info)
@@ -64,10 +65,18 @@ def dequeue_student(class_name):
 
 
 def change_queue_settings(settings):
-    if (server_db.child("queue").get().val() is None or server_db.child("queue").child(settings["class_name"]).get().val() is None):
+    if server_db.child("queue").get().val() is None or server_db.child("queue").child(settings["class"]).get().val() is None:
         raise QueueDoesNotExist
     else:
-        current_queue_info = server_db.child("queue").child(settings["class_name"]).get().val()
+        current_queue_info = server_db.child("queue").child(settings["class"]).get().val()
         current_queue_info["status"] = settings["status"]
         current_queue_info["eta"] = settings["eta"]
-        current_queue_info["instructors"] = settings["instructors"]
+        current_queue_info["instructor"] = settings["instructor"]
+        current_queue_info["location"] = settings["location"]
+        server_db.child("queue").child(settings["class"]).set(current_queue_info)
+
+
+def is_instructor(uid):
+    if server_db.child("Instructors").get().val() is None or server_db.child("Instructors").child(uid).get().val() is None:
+        return False
+    return True
