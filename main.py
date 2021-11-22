@@ -1,3 +1,4 @@
+from os import abort
 import sys
 import bottle
 import json
@@ -20,8 +21,11 @@ if __name__ == "__main__":
         return bottle.static_file("index.html", ".")
 
     @bottle.route('/<filename>')
-    def ret_html_2(filename):
-        return bottle.static_file(filename, ".") if ".html" in filename else None
+    def ret_html_2(filename): 
+        if filename.endswith(".html"):
+            return bottle.static_file(filename, ".") 
+        else:
+            bottle.abort(status=404, text="The requested file does not exist")
 
     @bottle.route('/instructor/<filename>')
     def ret_instructor(filename):
