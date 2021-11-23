@@ -29,6 +29,50 @@ def access_queue(class_name):
         return (queue_info.get("queue", []), queue_info.get("length"), queue_info.get("instructor"), queue_info.get("location"), queue_info.get("eta"), queue_info.get("student"), queue_info.get("status"))
 
 '''
+params: class_name: string
+return val: A list of student dictionaries representing the queue of students
+'''
+def access_user(discord_tag):
+    #if the user doesn't exist, we throw an exception
+    if(server_db.child("Students").get().val() is None or server_db.child("Students").child(discord_tag).get().val() is None):
+        raise UserDoesNotExist
+    else:
+        user_info = server_db.child("Students").child(discord_tag).get().val()
+        return (user_info.get("name"))
+
+
+'''
+params: class_name: string
+return val: A list of queue status, eta/time per student, length of queue.
+'''
+def access_course(class_name):
+    #if the queue doesn't exist, we throw an exception
+    if(server_db.child("queue").get().val() is None or server_db.child("queue").child(class_name).get().val() is None):
+        raise QueueDoesNotExist
+    else:
+        queue_info = server_db.child("queue").child(class_name).get().val()
+        return (queue_info.get("status"), queue_info.get("eta"), queue_info.get("length"), queue_info.get("queue", []))
+
+'''
+params: class_name: string
+return val: Nothing
+'''
+def leave_queue(class_name, discord_tag):
+    #if the queue doesn't exist, we throw an exception
+    print(discord_tag)
+    if(server_db.child("queue").get().val() is None or server_db.child("queue").child(class_name).get().val() is None):
+        raise QueueDoesNotExist
+    else:
+        current_queue_info = server_db.child("queue").child(class_name).get().val()
+        current_queue_info['length'] = int(current_queue_info['length']) - 1
+        new_queue_list = []
+        for user in current_queue_info.get('queue', []):
+          if user['name'] != str(discord_tag):
+            new_queue_list.append(user)
+        current_queue_info['queue'] = new_queue_list
+        server_db.child("queue").child(class_name).set(current_queue_info)
+
+'''
 params: class_name: string, ubit_student: string, name: string
 return val: Nothing
 '''
@@ -62,7 +106,6 @@ def dequeue_student(class_name):
             current_queue_info['queue'] = current_queue_info['queue'][1:] if len(current_queue_info) >= 2 else []
             server_db.child("queue").child(class_name).set(current_queue_info)
             return ret_student
-
 
 def change_queue_settings(settings):
     if server_db.child("queue").get().val() is None or server_db.child("queue").child(settings["class"]).get().val() is None:
