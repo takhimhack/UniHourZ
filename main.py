@@ -4,12 +4,14 @@ import threading as th
 from os import environ
 
 def startWebServer():
-    app.run(host='0.0.0.0', port=environ.get("PORT") if environ.get("PORT") is not None else 5000)
-
+	app.run(host='0.0.0.0', port=environ.get("PORT") if environ.get("PORT") is not None else 5000)
 
 if __name__ == "__main__":
-    # Start the web server
-    th.Thread(target=startWebServer).start()
-    #Start Discord Bot
-    bot.run(environ.get("TOKEN"))
-		
+	if environ.get("PROD") is None:
+		# Start the web server
+		th.Thread(target=startWebServer).start()
+	else:
+		# Start the web server
+		th.Thread(target=startWebServer).start()
+		#Start Discord Bot
+		bot.run(environ.get("TOKEN"))

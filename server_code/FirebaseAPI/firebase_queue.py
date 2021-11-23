@@ -30,6 +30,19 @@ def access_queue(class_name):
 
 '''
 params: class_name: string
+return val: A list of student dictionaries representing the queue of students
+'''
+def access_user(discord_tag):
+    #if the user doesn't exist, we throw an exception
+    if(server_db.child("Students").get().val() is None or server_db.child("Students").child(discord_tag).get().val() is None):
+        raise UserDoesNotExist
+    else:
+        user_info = server_db.child("Students").child(discord_tag).get().val()
+        return (user_info.get("name"))
+
+
+'''
+params: class_name: string
 return val: A list of queue status, eta/time per student, length of queue.
 '''
 def access_course(class_name):
@@ -38,14 +51,15 @@ def access_course(class_name):
         raise QueueDoesNotExist
     else:
         queue_info = server_db.child("queue").child(class_name).get().val()
-        return (queue_info.get("status"), queue_info.get("eta"), queue_info.get("length"))
+        return (queue_info.get("status"), queue_info.get("eta"), queue_info.get("length"), queue_info.get("queue", []))
 
 '''
-params: class_name: string, discord_tag: string
+params: class_name: string
 return val: Nothing
 '''
 def leave_queue(class_name, discord_tag):
     #if the queue doesn't exist, we throw an exception
+    print(discord_tag)
     if(server_db.child("queue").get().val() is None or server_db.child("queue").child(class_name).get().val() is None):
         raise QueueDoesNotExist
     else:
