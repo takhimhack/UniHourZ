@@ -14,7 +14,6 @@ from server_code.firebase_lock import *
 
 client = discord.Client()
 bot = commands.Bot(command_prefix='!')
-ohCategoryID = 908207459074703410
 
 print("Initializing")
 
