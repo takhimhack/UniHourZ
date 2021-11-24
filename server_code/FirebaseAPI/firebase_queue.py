@@ -64,7 +64,7 @@ def leave_queue(class_name, discord_tag):
         raise QueueDoesNotExist
     else:
         current_queue_info = server_db.child("queue").child(class_name).get().val()
-        current_queue_info['length'] = int(current_queue_info['length']) - 1
+        current_queue_info['length'] = max(int(current_queue_info['length']) - 1, 0)
         new_queue_list = []
         for user in current_queue_info.get('queue', []):
           if user['name'] != str(discord_tag):
@@ -100,9 +100,8 @@ def dequeue_student(class_name):
         if int(current_queue_info['length']) < 1:
             raise EmptyQueue
         else:
-            ret_student = current_queue_info['queue'][0]
+            current_queue_info['length'] = max(int(current_queue_info['length']) - 1, 0)
             current_queue_info['student'] = ret_student['name']
-            current_queue_info['length'] = int(current_queue_info['length']) - 1
             current_queue_info['queue'] = current_queue_info['queue'][1:] if len(current_queue_info) >= 2 else []
             server_db.child("queue").child(class_name).set(current_queue_info)
             return ret_student
