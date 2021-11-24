@@ -31,6 +31,14 @@ export function retrieve_registration_select() {
   }
 }
 
+export function retrieve_discord_tag() {
+  let value = "";
+  if (document.getElementById("discord_tag") !== null) {
+    return document.getElementById("discord_tag").value;
+  }
+  return "";
+}
+
 export function ajaxGetRequest(path, callback) {
   let request = new XMLHttpRequest();
   request.onreadystatechange = function () {

@@ -2,6 +2,7 @@ import {
   retrieve_email,
   retrieve_password,
   retrieve_registration_select,
+  retrieve_discord_tag,
   retrieve_name,
   ajaxPostRequest,
   ajaxGetRequest,
@@ -24,6 +25,7 @@ function submit_registration() {
     email: retrieve_email(),
     password: retrieve_password(),
     typeofUser: retrieve_registration_select(),
+    discordName: retrieve_discord_tag(),
   });
   ajaxPostRequest("/userRegistration", json_obj, process_auth_response);
 }
@@ -33,7 +35,7 @@ const process_auth_response = (callbackData) => {
   /* check to see if decoded reponse isn't valid, and print an error message */
   if (decoded_data["valid"] !== "valid") {
     document.getElementById("errormsg").innerHTML =
-      "Credentials Invalid. Make sure you're using a @buffalo.edu email";
+      "Credentials Invalid. Make sure you're using a buffalo.edu email, and providing the correct fields.";
   } else {
     window.location = "index.html";
   }
