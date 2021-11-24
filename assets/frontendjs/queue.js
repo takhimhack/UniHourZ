@@ -14,10 +14,29 @@ function onload_func() {
     ajaxGetRequest('/checkstatus', html_setup);
 }
 
+
+
 function html_setup(setup_response) {
     let decoded = JSON.parse(setup_response);
     if (decoded.valid === 'valid'){
-        let doms = document.getElementsByTagName('button');
+        let doms =document.getElementsByTagName('h4');
+              for (var k = 0; k < doms.length; k++) {
+            if (doms[k].hasAttribute("homehidden")) {
+                  var myobj = document.getElementsByClassName("homeremove");
+                doms[k].remove(myobj)
+            }
+        }
+
+               doms = document.getElementsByTagName('a');
+        for (var k = 0; k < doms.length; k++) {
+            if (doms[k].hasAttribute("homehidden")) {
+                  var myobj = document.getElementsByClassName("homeremove");
+                doms[k].remove(myobj)
+            }
+        }
+
+
+            doms=document.getElementsByTagName('button');
         for (var k = 0; k < doms.length; k++) {
             if (doms[k].hasAttribute("studenthidden")) {
                 doms[k].removeAttribute('hidden');
@@ -29,6 +48,9 @@ function html_setup(setup_response) {
                 doms[k].removeAttribute('hidden');
             }
         }
+
+
+
     }
 }
 
