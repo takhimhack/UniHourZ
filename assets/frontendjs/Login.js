@@ -20,12 +20,16 @@ document.getElementById("log in").addEventListener("click", submit_login);
 const login_success_callback = (userCredential) => {
   let user = userCredential.user;
 
+
   /* get the auth token and force a refresh */
   /* set a cookie with this information */
 
   user.getIdToken(true).then((userAuthToken) => {
     set_cookie("authToken", userAuthToken, 10);
+    window.location = "home.html";
+
   });
+
 
   /* Send a get request to get the right page. */
 };
@@ -41,6 +45,7 @@ function redirect_page(server_response){
         window.location = "/instructor/instructor-version-home.html";
     } else {
         window.location = "/student/student-version-home.html";
+
     }
 }
 
@@ -56,7 +61,7 @@ function ajaxPostRequest(path, data, callback) {
 }
 
 function submit_login() {
-  let email = retrieve_email();
+    let email = retrieve_email();
   let password = retrieve_password();
   logIn(email, password, login_success_callback, login_error_callback);
 }
