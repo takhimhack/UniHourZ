@@ -22,19 +22,19 @@ print("Initializing")
 async def on_ready():
 	print("Bot started!")  
 
-'''
+
 #Testing Command
 @bot.command(pass_context=True)
 async def test(message):
 	if message.author == bot.user:
 		return
-	if message.channel.category.id != ohCategoryID:
+	if str(message.channel.category) != "Office Hours": #Check if Category is correct
 		return
 	
 	originChannel = bot.get_channel(message.channel.id)
 	embed = discord.Embed(color=0x344FF5)
 	class_name = originChannel.name.lower().replace("-", "")
-'''
+	print(message.channel.category)
 
 # # # # # # # # # # # # # # # # # # # # # #
 # Discord Bot async requests for commands #
@@ -46,7 +46,7 @@ async def test(message):
 async def join(message):
 	if message.author == bot.user:
 		return
-	if message.channel.category.id != ohCategoryID:
+	if str(message.channel.category) != "Office Hours": #Check if Category is correct
 		return
 	
 	#Reference Setup
@@ -142,7 +142,7 @@ async def join(message):
 async def leave(message):
 	if message.author == bot.user:
 		return
-	if message.channel.category.id != ohCategoryID:
+	if str(message.channel.category) != "Office Hours": #Check if Category is correct
 		return
 	
 	#Reference Setup
@@ -236,7 +236,7 @@ async def leave(message):
 async def view(message):
 	if message.author == bot.user:
 		return
-	if message.channel.category.id != ohCategoryID:
+	if str(message.channel.category) != "Office Hours": #Check if Category is correct
 		return
 	
 	#Reference Setup
