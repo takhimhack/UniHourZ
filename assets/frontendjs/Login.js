@@ -36,7 +36,7 @@ const login_success_callback = (userCredential) => {
 
 const login_error_callback = (error) => {
   document.getElementById("errorf").innerHTML =
-    "*Email or Password Invalid." + error;
+    "*Email or Password Invalid.";
 };
 
 function redirect_page(server_response){

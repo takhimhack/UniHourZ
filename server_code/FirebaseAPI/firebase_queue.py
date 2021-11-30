@@ -100,6 +100,7 @@ def dequeue_student(class_name):
         if int(current_queue_info['length']) < 1:
             raise EmptyQueue
         else:
+            ret_student = current_queue_info['queue'][0]
             current_queue_info['length'] = max(int(current_queue_info['length']) - 1, 0)
             current_queue_info['student'] = ret_student['name']
             current_queue_info['queue'] = current_queue_info['queue'][1:] if len(current_queue_info) >= 2 else []
