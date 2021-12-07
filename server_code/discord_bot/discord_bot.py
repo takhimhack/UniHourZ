@@ -21,20 +21,6 @@ print("Initializing")
 async def on_ready():
 	print("Bot started!")  
 
-
-#Testing Command
-@bot.command(pass_context=True)
-async def test(message):
-	if message.author == bot.user:
-		return
-	if str(message.channel.category) != "Office Hours": #Check if Category is correct
-		return
-	
-	originChannel = bot.get_channel(message.channel.id)
-	embed = discord.Embed(color=0x344FF5)
-	class_name = originChannel.name.lower().replace("-", "")
-	print(message.channel.category)
-
 # # # # # # # # # # # # # # # # # # # # # #
 # Discord Bot async requests for commands #
 # # # # # # # # # # # # # # # # # # # # # #
@@ -275,6 +261,7 @@ async def view(message):
 		return
 	status = str(courseStatus[0])
 	eta = str(courseStatus[1])
+	preLength = str(courseStatus[2])
 	if status == "closed":
 		embed.add_field(name="Office Hour Queue Closed", value="❌ Error: This course's office hours are currently closed.")
 		await originChannel.send(embed=embed)
@@ -301,10 +288,33 @@ async def view(message):
 	for i in queueList:
 		queueCount += 1
 		formattedQueueList += str(queueCount) + ". " +str((i['name'] + "\n"))
+	
+	fbUser = str(message.author)
+	fbUser = fbUser.replace("#", "_", 1)
+	try:
+		fireBaseLock.acquire()
+		user_info = fb.access_user(fbUser)
+		fireBaseLock.release()
+	except:
+		fireBaseLock.release()
+		embed.add_field(name="Missing User Registration", value="❌ Error: You are not currently registered on the website.")
+		await originChannel.send(embed=embed)
+		return
+	studentIndex = 1
+	inQueue = False
+	for user in queueList:
+		if user['name'] == user_info:
+			inQueue = True
+		if not inQueue:
+			studentIndex += 1	
+
+
 	msgTitle = "Current Queue for " + str(class_name)
-	etaMin = eta + " minutes"
+	etaLabeled = eta + " min"
+	studentETA = str(int(eta) * int(studentIndex)) + "min"
 	embed=discord.Embed(title=msgTitle)
 	embed.add_field(name="Current Queue", value=formattedQueueList)
 	embed.add_field(name="Length: ", value=str(lengthOfQueue))
-	embed.add_field(name="Time Per Student: ", value=etaMin)
+	embed.add_field(name="Time Per Student: ", value=etaLabeled)
+	embed.add_field(name="Your Estimated Wait Time: ", value=studentETA)
 	await originChannel.send(embed=embed)
