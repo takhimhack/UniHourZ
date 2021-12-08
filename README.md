@@ -2,7 +2,7 @@
 
 # Team: The Swole Kangaroos
 # UniHourz
-A centralized app designed to manage TA office hours for CSE courses in the University at Buffalo.
+A centralized web app and a discord bot designed to manage TA office hours for CSE courses in the University at Buffalo.
 
 ## Getting Started (local)
 - Download the repo
@@ -19,7 +19,8 @@ A centralized app designed to manage TA office hours for CSE courses in the Univ
 - Python
 - Firebase
 - Docker
-- Heroku 
+- Heroku
+- Discord 
 
 ## Zenhub 
 - Our Zenhub board is [here](https://app.zenhub.com/workspaces/cse-442-6130d481f9bb7b0013b8ca05/board)
