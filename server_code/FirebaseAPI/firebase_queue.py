@@ -97,8 +97,12 @@ def dequeue_student(class_name):
         raise QueueDoesNotExist
     else:
         current_queue_info = server_db.child("queue").child(class_name).get().val()
-        if int(current_queue_info['length']) < 1:
+        if int(current_queue_info['length']) < 1 and current_queue_info['student'] == "":
             raise EmptyQueue
+        elif int(current_queue_info['length']) < 1:
+            current_queue_info['student'] = ""
+            server_db.child("queue").child(class_name).set(current_queue_info)
+            return ""
         else:
             ret_student = current_queue_info['queue'][0]
             current_queue_info['length'] = max(int(current_queue_info['length']) - 1, 0)
@@ -113,6 +117,10 @@ def change_queue_settings(settings):
     else:
         current_queue_info = server_db.child("queue").child(settings["class"]).get().val()
         current_queue_info["status"] = settings["status"]
+        if settings["status"] == "closed":
+            current_queue_info["student"] = ""
+            current_queue_info["length"] = 0
+            current_queue_info["queue"] = []
         current_queue_info["eta"] = settings["eta"]
         current_queue_info["instructor"] = settings["instructor"]
         current_queue_info["location"] = settings["location"]
