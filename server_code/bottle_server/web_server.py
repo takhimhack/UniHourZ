@@ -1,4 +1,4 @@
-import sys
+from os.path import isfile
 import bottle
 import json
 import requests
@@ -18,14 +18,18 @@ def ret_html():
 
 @app.route('/<filename>')
 def ret_html_2(filename): 
-    if filename.endswith(".html"):
+    if filename.endswith(".html") and isfile(filename):
         return bottle.static_file(filename, ".") 
     else:
-        bottle.abort(code=404, text="The requested file does not exist")
+        bottle.abort(code=404, text="The requested file does not exist.")
 
-@app.route('/instructor/<filename>')
+@app.route('/instructor/<filename:path>')
 def ret_instructor(filename):
     #note: upon logging into the app, we can redirect to this if the request was made with an instructor account.
+    #abort with a 404 if the requested file doesn't exist
+    if not isfile(f"./instructor/{filename}"):
+        bottle.abort(code=404, text="The requested file does not exist.")
+
     #get the auth token from the cookie
     authToken = bottle.request.get_cookie("authToken")
     
@@ -46,7 +50,7 @@ def ret_instructor(filename):
     # If this localId is not under instructors, we abort.
     localId = account_info['users'][0]['localId']
 
-    if fire.server_db.child("Instructors").child(localId).get().val() is None:
+    if not fire_q.is_instructor(localId):
         bottle.abort(code=403, text="We're sorry, but you don't have the permissions to view this page.")
         
     else:
@@ -55,14 +59,6 @@ def ret_instructor(filename):
 @app.route('/assets/<filename:path>')
 def ret_assets(filename):
     return bottle.static_file(filename, "./assets")
-
-@app.route('/instructor/<filename:path>')
-def ret_assets(filename):
-    return bottle.static_file(filename, "./instructor")
-
-@app.route('/student/<filename:path>')
-def ret_assets(filename):
-    return bottle.static_file(filename, "./student")
 
 @app.route('/getConfig')
 def return_config():
