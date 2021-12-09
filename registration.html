@@ -1,94 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-    />
-    <title>CSE_442</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="assets/css/Login-Form-Dark.css" />
-    <link rel="stylesheet" href="assets/css/styles.css" />
-  </head>
 
-  <body>
-    <section id="message" class="login-dark">
-      <form
-        action="/index.html"
-        method="GET"
-        oninput='Confirm_Password.setCustomValidity(Confirm_Password.value != password_original.value ? "Passwords do not match." : "")'
-      >
-        <h2 class="visually-hidden">Login Form</h2>
-        <div class="illustration">
-          <img src="assets/img/UniHourZ-logo2.png" style="width: 218px" />
-          <h4 style="color: rgb(255, 255, 255)">Sign up</h4>
-        </div>
-        <div class="mb-3">
-          <input
-            class="form-control"
-            type="text"
-            name="Name"
-            id="Name"
-            placeholder="Name"
-            required=""
-            pattern="^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&amp;*(){}|~<>;:[\]]{2,}$"
-            style="height: 44px"
-          /><input
-            class="form-control"
-            type="email"
-            name="email"
-            id="inputemail"
-            placeholder="Enter your buffalo.edu email"
-            required=""
-            pattern=".+@buffalo\.edu"
-            style="height: 44px"
-          />
-        </div>
-        <div class="mb-3">
-          <input
-            class="form-control"
-            type="password"
-            id="password_one"
-            name="password_original"
-            placeholder="Password"
-            required=""
-            minlength="6"
-          /><input
-            class="form-control"
-            type="password"
-            id="password_two"
-            name="Confirm_Password"
-            placeholder="Confirm Password"
-            style="height: 57px"
-            minlength="6"
-          />
-        </div>
-        <select class="form-select" id="reg_select" required="">
-          <optgroup label="What is your profession?">
-            <option value="12">Student</option>
-            <option value="14">Instructor</option>
-          </optgroup></select
-        ><span id="message"></span>
-        <p id="errormsg"></p>
-        <div class="mb-3">
-          <button
-            class="btn btn-primary d-block w-100"
-            onclick="submit_registration();"
-            type="submit"
-          >
-            Register
-          </button>
-        </div>
-        <a
-          class="forgot"
-          href="index.html"
-          style="text-align: right; height: 13px"
-          >Already have an account? Log in</a
-        >
-      </form>
-    </section>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/frontendjs/auth.js"></script>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+  <title>UniHourZ - Registration</title>
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/Login-Form-Dark.css" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+
+<body>
+  <section id="message" class="login-dark">
+    <form action="/index.html" method="GET"
+      oninput='Confirm_Password.setCustomValidity(Confirm_Password.value != password_original.value ? "Passwords do not match." : "")'>
+      <h2 class="visually-hidden">Login Form</h2>
+      <div class="illustration">
+        <img src="assets/img/UniHourZ-logo2.png" style="width: 218px" />
+        <h4 style="color: rgb(255, 255, 255)">Sign up</h4>
+      </div>
+      <div class="mb-3">
+        <input class="form-control" type="text" name="Name" id="Name" placeholder="Name" required=""
+          pattern="^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&amp;*(){}|~<>;:[\]]{2,}$" style="height: 44px" /><input
+          class="form-control" type="email" name="email" id="inputemail" placeholder="Enter your buffalo.edu email"
+          required="" pattern=".+@buffalo\.edu" style="height: 44px" />
+      </div>
+      <div class="mb-3">
+        <input class="form-control" type="password" id="password_one" name="password_original" placeholder="Password"
+          required="" minlength="6" /><input class="form-control" type="password" id="password_two"
+          name="Confirm_Password" placeholder="Confirm Password" style="height: 57px" minlength="6" />
+      </div>
+      <select name="registerProf" class="form-select" id="reg_select" required="" onclick="showHide()">
+        <optgroup label="What is your profession?">
+          <option value="12">Student</option>
+          <option value="14">Instructor</option>
+        </optgroup>
+      </select>
+      <div class="mb-3" id="discord">
+        <input class="form-control" type="text" id="discord_tag" name="discord_tag"
+          placeholder="Discord Tag (e.g. Name#1234)" style="height: 57px" minlength="6" />
+      </div>
+      <span id="message"></span>
+      <p style="color: Tomato" id="errormsg"></p>
+      <div class="mb-3">
+        <button class="btn btn-primary d-block w-100" id="registerbutton" type="submit">
+          Register
+        </button>
+      </div>
+      <a class="forgot" href="index.html" style="text-align: right; height: 13px">Already have an account? Log in</a>
+    </form>
+  </section>
+  <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+  <script type="module" src="assets/frontendjs/Register.js"></script>
+  <script>
+    function showHide(){
+      let selector = document.getElementById("reg_select");
+      if(selector.options[selector.selectedIndex].value == "14"){
+        document.getElementById("discord").style.display='none'
+      }
+      else{
+        document.getElementById("discord").style.display='block'
+      }
+    }
+  </script>
+</body>
+
 </html>

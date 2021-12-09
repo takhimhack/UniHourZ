@@ -11,7 +11,8 @@ def sanitize_input(jsonStr):
 
 def contains(clientData, listOfKeys):
     for key in listOfKeys:
-        if key not in clientData or clientData[key] == "":
+        if key not in clientData or (key != 'discordName' and clientData[key] == "") or \
+                (key == 'discordName' and clientData[key] == "" and clientData['typeofUser'] != "Instructor"):
             return False
     
     return True
