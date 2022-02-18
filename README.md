@@ -46,4 +46,4 @@ A centralized web app and a discord bot designed to manage TA office hours for C
 - Shijie Liu
 
 ## MVP Demo of UniHourZ
-![Demo](https://i.imgur.com/95na0st.gif)
+![Demo](https://i.imgur.com/95na0st.mp4)
